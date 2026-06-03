@@ -15,8 +15,8 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (T
 | 04 | Button matrix (2–3× 74HC4067 — count incl. MK2 Hot Cue A/B/C + Hot Loop) | 🚧 TBD |
 | 05 | Discrete buttons (PLAY / CUE / VINYL) | 🚧 TBD |
 | 06 | LEDs (12 V OEM via MOSFET + WS2812 status) | 🚧 TBD |
-| 07 | [OEM VFD reuse research](./07-display-research.md) — historical, superseded by 08 | ✅ v0.1 |
-| 08 | [**Display Path D — port djgreeb MK3 → MK2**](./08-display.md) | ✅ v0.1 plan |
+| 07 | [OEM VFD reuse research](./07-display-research.md) — historical path comparison | ✅ v0.1 |
+| 08 | [**Display — v0.1 JFLB LEDs only, Path D deferred to v0.2+**](./08-display.md) | ✅ v0.1 locked |
 | 09 | Power (USB 5 V, 3.3 V LDO, MT3608 boost) | 🚧 TBD |
 
 ## GPIO summary (v0.1, tentative)

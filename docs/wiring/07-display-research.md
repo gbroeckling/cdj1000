@@ -66,13 +66,11 @@ This is what every successful build has done.
 
 ---
 
-## Decision (2026-06-03): **Path D**
+## Decision history
 
-**Path D = port [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) from MK3 to MK2.** djgreeb's project replaces the OEM VFD with an STM32F746G-DISCO board running custom firmware that simulates the CDJ-2000nxs UI (waveforms, BPM, slip mode, RGB) and plays from SD. We reuse their entire display+UI+audio stack and only re-target the input side (button/serial-protocol decode) to MK2.
+**2026-06-03, v0.1 lock (current):** **No big display in v0.1.** Reuse the JFLB plain-LED indicators only (vinyl indicator + 1–3 mode LEDs). VFD glass stays dark. See [`08-display.md`](./08-display.md). Jog-centre protocol byte gets captured during disassembly to keep the v0.2+ option alive.
 
-Path D was selected over Path C because the published firmware closes most of the work and the included protocol decode PDF gives us 80%+ of the MK3 panel↔main byte format for free.
-
-Implementation plan: [`08-display.md`](./08-display.md).
+**2026-06-03, earlier in the day:** Path D selected — port [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) from MK3 to MK2. **Deferred to v0.2+** after scope reduction; the published firmware and protocol decode still make it the right target if/when the big-screen ambition returns.
 
 (Old recommendation kept below for historical context.)
 

@@ -4,7 +4,7 @@
 
 Resurrect a Pioneer CDJ-1000MK2 (2003, no native USB/MIDI) as a class-compliant USB-MIDI / HID controller for Traktor Pro 4. The OEM mainboard and CD drive are removed; the chassis, jog wheel assembly, pitch fader, button PCBs (including the MK2-added Hot Cue A/B/C and Hot Loop buttons), pots, and encoders are kept and re-wired to an **ESP32-S3 DevKitC-1 (N16R8)** that speaks USB-MIDI natively via TinyUSB.
 
-> **Status:** architecture v0.3 — target unit confirmed as CDJ-1000**MK2** (service manual doc RRV2802). MK2 JFLB display board (DWG1568) uses the **same µPD16306B VFD driver as MK1** (IC1201). **Display path: Path D** — port [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) from MK3 to MK2. See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
+> **Status:** architecture v0.4 — **v0.1 scope locked**: S3-only USB-MIDI controller, no big display, optionally reuse the JFLB LED indicators (not the VFD glass) for power-on feedback. Path D (port djgreeb MK3 firmware to MK2 with an STM32F746G-DISCO panel) is **deferred to v0.2+**. MK2 protocol-byte capture for the jog-centre cursor happens during v0.1 disassembly to keep the v0.2 option alive. See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
 
 ---
 
@@ -71,16 +71,21 @@ Local clones of the three GitHub repos live under `references/` (gitignored).
 
 ---
 
-## Open items (MK2)
+## Open items (MK2, v0.1)
 
 1. Confirm jog encoder voltage + PPR from the **MK2** service manual (RRV2802)
 2. Jog-touch sensor type on MK2 — capacitive vs pressure sheet (determines S3 native touch vs comparator front-end)
 3. Trace MK2 button PCB connector (CN) pinout → 4067 channel map. Include Hot Cue A/B/C + Hot Loop in the count.
 4. Lock final GPIO map after button count — MK2 may need a 3rd 4067 mux
-5. ~~Identify the MK2 VFD driver IC~~ — **CLOSED**: NEC µPD16306B at IC1201 on JFLB DWG1568 (same driver as MK1).
-6. ~~Display decision~~ — **CLOSED**: Path D (port djgreeb MK3 → MK2). See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
-7. Decode the MK2 panel↔main serial protocol (the MK3 byte-level decode in djgreeb's repo is the starting point; expect "MK3 minus some bytes" per the CDJ-800 MK2 analogue).
-8. Firmware path — ESP-IDF + TinyUSB MIDI **vs** Arduino-ESP32 + Adafruit TinyUSB. (Display logic stays on the STM32 Disco; the S3 handles MIDI/HID + jog/buttons/fader.)
+5. **JFLB LED audit** — when the unit is open, trace the JFLB board to identify which indicators are plain LEDs (not VFD segments). The "vinyl" indicator (blue glow) is almost certainly an LED; expect 1–3 more (mode indicators). LEDs get wired to S3 GPIO via small MOSFETs.
+6. **Jog-centre protocol-byte capture** — *before* disassembly. Logic-analyzer the MK2 panel↔main ribbon at known jog positions; locate the 1-byte position cursor (1..135 + animation codes per djgreeb's MK3 doc). Document for v0.2. **The capture window closes the moment the OEM mainboard comes out.**
+7. Firmware path — ESP-IDF + TinyUSB MIDI **vs** Arduino-ESP32 + Adafruit TinyUSB.
+
+### Closed for v0.1
+
+- ✅ MK2 VFD driver IC identified: NEC µPD16306B at IC1201 on JFLB DWG1568 (same as MK1).
+- ✅ Display: **no big screen at v0.1**. JFLB LEDs only, VFD glass dark, Traktor on laptop carries the rich UI.
+- ✅ Big screen path: Path D (port djgreeb MK3 → MK2, STM32F746G-DISCO) documented in [`docs/wiring/08-display.md`](docs/wiring/08-display.md), deferred to v0.2+.
 
 ---
 
