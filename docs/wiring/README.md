@@ -12,7 +12,7 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (T
 | 00b | System overview block diagram (SVG above) | ✅ v0.1 |
 | 01 | [Jog encoder (quadrature → TXS0108E → PCNT)](./01-jog-encoder.md) | ✅ v0.1 |
 | 02 | [Jog touch sheet (3 sensor paths)](./02-jog-touch.md) | ✅ v0.1 |
-| 03 | Pitch fader (3.3 V re-feed + ADC) | 🚧 TBD |
+| 03 | [Pitch fader (3.3 V re-feed + ADC)](./03-pitch-fader.md) | ✅ v0.1 |
 | 04 | Button matrix (2–3× 74HC4067 — count incl. MK2 Hot Cue A/B/C + Hot Loop) | 🚧 TBD |
 | 05 | Discrete buttons (PLAY / CUE / VINYL) | 🚧 TBD |
 | 06 | LEDs (12 V OEM via MOSFET + WS2812 status) | 🚧 TBD |
