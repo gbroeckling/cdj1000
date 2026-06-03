@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk  { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .oem  { fill:#f1f8e9; stroke:#33691e; stroke-width:1.8; }
+    .esp  { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2; }
+    .pathA{ fill:#f3e5f5; stroke:#6a1b9a; stroke-width:1.8; }
+    .pathB{ fill:#fff8e1; stroke:#f57f17; stroke-width:1.8; }
+    .pathC{ fill:#e1f5fe; stroke:#0277bd; stroke-width:1.8; }
+    .title{ font-size:18px; font-weight:700; fill:#111; }
+    .h    { font-size:14px; font-weight:700; fill:#111; }
+    .note { font-size:11px; fill:#555; }
+    .pin  { font-size:11px; font-weight:600; fill:#0d47a1; }
+    .red  { fill:#c62828; }
+    .pwr5 { stroke:#c62828; stroke-width:2; fill:none; }
+    .pwr3 { stroke:#1565c0; stroke-width:2; fill:none; }
+    .gnd  { stroke:#444; stroke-width:1.5; stroke-dasharray:4,3; fill:none; }
+    .sig  { stroke:#0d47a1; stroke-width:1.5; fill:none; }
+    .sig5 { stroke:#1565c0; stroke-width:2; fill:none; stroke-dasharray:none; }
+    .sigls{ stroke:#ef6c00; stroke-width:1.8; fill:none; }
+  </style>
+
+  <text x="20" y="28" class="title">02 — Jog Touch Wiring (three sensor paths)</text>
+  <text x="20" y="46" class="note">Pioneer jog-touch sheet sits on top of the platter. Sensor type unverified on MK2 — wire whichever the bench check confirms.</text>
+
+  <!-- OEM jog-touch sheet -->
+  <rect x="20" y="80" width="280" height="200" rx="10" class="oem"/>
+  <text x="160" y="106" text-anchor="middle" class="h" fill="#33691e">JOG-TOUCH SHEET</text>
+  <text x="160" y="122" text-anchor="middle" class="note">on top of the platter (DAH2052)</text>
+  <text x="160" y="138" text-anchor="middle" class="note">MK1 used a Pioneer "Sheet SW"</text>
+  <text x="160" y="154" text-anchor="middle" class="note">DSX1060-family part.</text>
+  <text x="160" y="170" text-anchor="middle" class="note">MK2: verify — JOGB Assy DWG1569</text>
+  <text x="160" y="186" text-anchor="middle" class="note">is unchanged from MK1, so</text>
+  <text x="160" y="202" text-anchor="middle" class="note">DSX1060 is the working bet.</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="232" r="4" fill="#0d47a1"/>
+    <text x="280" y="236" text-anchor="end" class="pin">SHEET pad (top)</text>
+    <circle cx="290" cy="252" r="4" fill="#444"/>
+    <text x="280" y="256" text-anchor="end" class="note">GND return (chassis)</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- PATH A — S3 native cap-touch -->
+  <!-- ============================================================ -->
+  <rect x="370" y="80" width="320" height="180" rx="10" class="pathA"/>
+  <text x="530" y="104" text-anchor="middle" class="h" fill="#6a1b9a">PATH A — Capacitive sheet</text>
+  <text x="530" y="120" text-anchor="middle" class="note">use the S3 native touch peripheral</text>
+
+  <text x="390" y="148" class="note">• connect sheet pad directly to a TOUCH-capable GPIO</text>
+  <text x="390" y="164" class="note">• 1 MΩ bleeder to GND on the line (drains static)</text>
+  <text x="390" y="180" class="note">• shielded twisted pair from sheet → GPIO; shield → GND</text>
+  <text x="390" y="196" class="note">• firmware: <tspan font-family="ui-monospace">touch_pad_init() + touch_pad_config()</tspan></text>
+  <text x="390" y="212" class="note">• threshold tuned with finger on/off baseline</text>
+  <text x="390" y="232" class="note">Components: <tspan fill="#6a1b9a" font-weight="600">1 × 1 MΩ resistor. That's it.</tspan></text>
+  <text x="390" y="248" class="note">Tested at: bedroom touch, scratch-grip, wet finger.</text>
+
+  <!-- ============================================================ -->
+  <!-- PATH B — comparator front-end (pressure / contact sheet) -->
+  <!-- ============================================================ -->
+  <rect x="370" y="290" width="320" height="200" rx="10" class="pathB"/>
+  <text x="530" y="314" text-anchor="middle" class="h" fill="#f57f17">PATH B — Pressure / contact sheet</text>
+  <text x="530" y="330" text-anchor="middle" class="note">sheet acts as a switch / variable resistor</text>
+
+  <text x="390" y="358" class="note">• pull-up: sheet pad ─ 10 kΩ ─ 3.3 V</text>
+  <text x="390" y="374" class="note">• direct to GPIO if logic level is clean</text>
+  <text x="390" y="390" class="note">• OR add Schmitt comparator if signal is noisy:</text>
+  <text x="390" y="406" class="note">   – LM393 / TL331 single comparator</text>
+  <text x="390" y="422" class="note">   – ref divider sets the touch threshold (~1.65 V)</text>
+  <text x="390" y="438" class="note">   – 100 kΩ positive feedback → hysteresis</text>
+  <text x="390" y="458" class="note">Components: <tspan fill="#f57f17" font-weight="600">10 kΩ, optional LM393 + 3 × 100 kΩ</tspan></text>
+  <text x="390" y="474" class="note">+ 100 nF decoupling on the comparator VCC.</text>
+
+  <!-- ============================================================ -->
+  <!-- PATH C — tap the hub-PCB's existing front-end output -->
+  <!-- ============================================================ -->
+  <rect x="370" y="520" width="320" height="180" rx="10" class="pathC"/>
+  <text x="530" y="544" text-anchor="middle" class="h" fill="#0277bd">PATH C — Tap hub PCB's existing output</text>
+  <text x="530" y="560" text-anchor="middle" class="note">if Pioneer already conditioned the signal</text>
+
+  <text x="390" y="588" class="note">• the jog hub PCB on the JOGB Assy likely already has</text>
+  <text x="390" y="604" class="note">  a small transistor or comparator that emits a clean</text>
+  <text x="390" y="620" class="note">  digital "touched / not touched" line out of the ribbon</text>
+  <text x="390" y="636" class="note">• simplest path: probe the ribbon while finger-on-platter</text>
+  <text x="390" y="652" class="note">  to find which wire toggles. Read it directly.</text>
+  <text x="390" y="668" class="note">• if 5 V: route via the same TXS0108E spare channel</text>
+  <text x="390" y="684" class="note">  already on the carrier PCB for the jog encoder.</text>
+
+  <!-- ============================================================ -->
+  <!-- ESP32-S3 -->
+  <!-- ============================================================ -->
+  <rect x="800" y="160" width="380" height="380" rx="12" class="esp"/>
+  <text x="990" y="186" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 DevKitC-1</text>
+  <text x="990" y="202" text-anchor="middle" class="note">jog touch → GPIO 6</text>
+
+  <!-- Path A landing -->
+  <rect x="820" y="220" width="340" height="80" rx="8" fill="#fff" stroke="#6a1b9a"/>
+  <text x="990" y="244" text-anchor="middle" class="h" fill="#6a1b9a">Path A landing — TOUCH peripheral</text>
+  <text x="830" y="262" class="note">GPIO 6 = TOUCH_PAD6 (S3 native cap-touch capable)</text>
+  <text x="830" y="278" class="note">configure as touch input; no GPIO mode needed</text>
+  <text x="830" y="294" class="note">read raw value; threshold = baseline − fingerprint</text>
+
+  <!-- Path B landing -->
+  <rect x="820" y="310" width="340" height="80" rx="8" fill="#fff" stroke="#f57f17"/>
+  <text x="990" y="334" text-anchor="middle" class="h" fill="#f57f17">Path B landing — digital input</text>
+  <text x="830" y="352" class="note">GPIO 6 = digital input, internal pull-up enabled</text>
+  <text x="830" y="368" class="note">debounce 5 ms in firmware</text>
+  <text x="830" y="384" class="note">comparator OUT is open-drain → safe to share pin</text>
+
+  <!-- Path C landing -->
+  <rect x="820" y="400" width="340" height="80" rx="8" fill="#fff" stroke="#0277bd"/>
+  <text x="990" y="424" text-anchor="middle" class="h" fill="#0277bd">Path C landing — digital input (level-shifted if 5 V)</text>
+  <text x="830" y="442" class="note">GPIO 6 = digital input, pull-up off (sig is push-pull)</text>
+  <text x="830" y="458" class="note">if OEM signal is 5 V → spare TXS0108E channel</text>
+  <text x="830" y="474" class="note">if 3.3 V → direct wire from hub PCB ribbon</text>
+
+  <!-- Decision summary -->
+  <rect x="820" y="500" width="340" height="32" rx="6" fill="#fff" stroke="#b71c1c"/>
+  <text x="990" y="520" text-anchor="middle" class="h" fill="#b71c1c">⚠ One sheet, one path. Verify on bench before wiring.</text>
+
+  <!-- wires -->
+  <!-- Sheet → all three paths -->
+  <line x1="290" y1="232" x2="340" y2="232" class="sig"/>
+  <line x1="340" y1="232" x2="340" y2="170" class="sig"/>
+  <line x1="340" y1="170" x2="370" y2="170" class="sig"/>
+
+  <line x1="340" y1="232" x2="340" y2="390" class="sig"/>
+  <line x1="340" y1="390" x2="370" y2="390" class="sig"/>
+
+  <line x1="340" y1="390" x2="340" y2="610" class="sig"/>
+  <line x1="340" y1="610" x2="370" y2="610" class="sig"/>
+
+  <!-- Paths → S3 -->
+  <line x1="690" y1="170" x2="800" y2="260" class="sig"/>
+  <line x1="690" y1="390" x2="800" y2="350" class="sig"/>
+  <line x1="690" y1="610" x2="800" y2="440" class="sig"/>
+
+  <!-- ============================================================ -->
+  <!-- Decision flow (bottom-left) -->
+  <!-- ============================================================ -->
+  <rect x="20" y="320" width="280" height="380" rx="10" class="blk"/>
+  <text x="160" y="344" text-anchor="middle" class="h">Bench decision flow</text>
+  <text x="160" y="360" text-anchor="middle" class="note">how to pick a path with a meter</text>
+
+  <text x="35" y="384" class="note"><tspan font-weight="700">1.</tspan> Disconnect the OEM main board</text>
+  <text x="35" y="400" class="note">   ribbon from the JOGB hub PCB.</text>
+  <text x="35" y="418" class="note"><tspan font-weight="700">2.</tspan> Probe each ribbon line with</text>
+  <text x="35" y="434" class="note">   a meter on resistance, finger</text>
+  <text x="35" y="450" class="note">   on / off the platter:</text>
+  <text x="50" y="468" class="note">• line goes ~1 MΩ → ~0 Ω on touch</text>
+  <text x="50" y="484" class="note">  ⇒ <tspan fill="#f57f17" font-weight="700">contact sheet → Path B</tspan></text>
+  <text x="50" y="500" class="note">• line capacitance changes</text>
+  <text x="50" y="516" class="note">  on touch (use scope)</text>
+  <text x="50" y="532" class="note">  ⇒ <tspan fill="#6a1b9a" font-weight="700">cap sheet → Path A</tspan></text>
+  <text x="50" y="548" class="note">• line is a clean digital high/low</text>
+  <text x="50" y="564" class="note">  toggle on touch</text>
+  <text x="50" y="580" class="note">  ⇒ <tspan fill="#0277bd" font-weight="700">Pioneer already did it → Path C</tspan></text>
+  <text x="35" y="606" class="note"><tspan font-weight="700">3.</tspan> Lock the path in firmware:</text>
+  <text x="50" y="624" class="note">A: touch_pad driver, no level shift</text>
+  <text x="50" y="640" class="note">B: gpio digital, +pull-up, debounce</text>
+  <text x="50" y="656" class="note">C: gpio digital, +TXS0108E if 5 V</text>
+  <text x="35" y="680" class="note"><tspan font-weight="700">4.</tspan> Bedroom-touch and scratch test</text>
+  <text x="35" y="694" class="note">   to confirm latency and reliability.</text>
+</svg>
