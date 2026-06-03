@@ -4,7 +4,7 @@
 
 Resurrect a Pioneer CDJ-1000MK2 (2003, no native USB/MIDI) as a class-compliant USB-MIDI / HID controller for Traktor Pro 4. The OEM mainboard and CD drive are removed; the chassis, jog wheel assembly, pitch fader, button PCBs (including the MK2-added Hot Cue A/B/C and Hot Loop buttons), pots, and encoders are kept and re-wired to an **ESP32-S3 DevKitC-1 (N16R8)** that speaks USB-MIDI natively via TinyUSB.
 
-> **Status:** architecture v0.4 — **v0.1 scope locked**: S3-only USB-MIDI controller, no big display, optionally reuse the JFLB LED indicators (not the VFD glass) for power-on feedback. Path D (port djgreeb MK3 firmware to MK2 with an STM32F746G-DISCO panel) is **deferred to v0.2+**. MK2 protocol-byte capture for the jog-centre cursor happens during v0.1 disassembly to keep the v0.2 option alive. See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
+> **Status:** architecture v0.5 — **v0.1 scope locked**: S3-only USB-MIDI controller, no big display, optionally reuse the JFLB LED indicators (not the VFD glass) for power-on feedback. **Firmware = ESPHome on esp-idf** + 2 custom external components (USB-MIDI, jog quadrature). The deck never reboots on WiFi or HA disconnect, so it works as a plain USB-MIDI controller anywhere. See [`firmware/README.md`](firmware/README.md). Path D (OEM display reuse via panel↔main protocol replay) is **deferred to v0.2+** — see [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
 
 ---
 

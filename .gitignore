@@ -31,6 +31,11 @@ references/
 # Source PDFs / manuals (kept local; not redistributed due to copyright)
 docs/source/
 
+# Firmware
+firmware/secrets.yaml
+firmware/.esphome/
+firmware/build/
+
 # Working files
 *.tmp
 *_preview.html

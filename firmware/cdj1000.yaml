@@ -1,0 +1,344 @@
+# cdj1000.yaml — ESPHome main config for the CDJ-1000MK2 → ESP32-S3 build
+#
+# Wiring spec: ../docs/wiring/00-board-map.md  (master map)
+# Per-subsystem docs: ../docs/wiring/01..09-*.md
+#
+# This file is intentionally heavy on comments so it stays in lock-step
+# with the wiring docs. When a wiring doc updates, the corresponding
+# YAML block updates with it.
+
+esphome:
+  name: cdj1000mk2
+  friendly_name: "CDJ-1000MK2 Controller"
+  comment: "Pioneer CDJ-1000MK2 → ESP32-S3 USB-MIDI controller for Traktor Pro 4"
+  on_boot:
+    priority: -100
+    then:
+      # All MOSFETs already pulled-down externally; this is belt-and-braces.
+      - output.turn_off: cue_ring_led
+      - output.turn_off: play_ring_led
+      - output.turn_off: loop_indicator_led
+      - output.turn_off: vinyl_led
+      - output.turn_off: jflb_led_1
+      - output.turn_off: jflb_led_2
+      - output.turn_off: jflb_led_3
+      - output.turn_off: jflb_led_4
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+    # esp-idf is required for TinyUSB / native USB-MIDI
+
+# ============================================================
+# WiFi — resilient config (NEVER reboot on disconnect)
+# ============================================================
+wifi:
+  networks:
+    - ssid: !secret home_ssid
+      password: !secret home_password
+      priority: 10
+    # Optional second network for studio / venue use:
+    # - ssid: !secret studio_ssid
+    #   password: !secret studio_password
+    #   priority: 5
+
+  reboot_timeout: 0s             # ← critical: never reboot if WiFi drops
+  power_save_mode: none          # tighter latency for USB-MIDI
+
+  # Captive-portal AP fallback when no known network is available
+  ap:
+    ssid: "CDJ1000MK2-Setup"
+    password: ""                  # open AP; pair via captive portal
+
+captive_portal:
+
+# ============================================================
+# Home Assistant API — also non-fatal if unreachable
+# ============================================================
+api:
+  encryption:
+    key: !secret api_key
+  reboot_timeout: 0s             # ← critical: never reboot if HA unreachable
+
+# ============================================================
+# OTA — available whenever WiFi is up
+# ============================================================
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+logger:
+  level: INFO
+  # Drop to DEBUG temporarily when bringing up new subsystems.
+
+# ============================================================
+# Custom external components (see firmware/components/)
+# ============================================================
+external_components:
+  - source: components/usb_midi
+  - source: components/jog_quadrature
+
+# ============================================================
+# Subsystem 01 — JOG ENCODER (custom quadrature component)
+# Wiring: docs/wiring/01-jog-encoder.md
+# ============================================================
+sensor:
+  - platform: jog_quadrature
+    name: "Jog Position Delta"
+    id: jog_delta
+    pin_a: GPIO4         # CH A via TXS0108E (5 V → 3.3 V)
+    pin_b: GPIO5         # CH B via TXS0108E
+    update_interval: 10ms
+    on_value:
+      then:
+        - lambda: |-
+            // Emit MIDI jog scratch CC
+            float delta = x;
+            id(usb_midi_dev).send_cc(0, 31, int(delta * 64.0f + 64.0f));
+
+  # ============================================================
+  # Subsystem 03 — PITCH FADER (ADC1_CH0 on GPIO 1)
+  # Wiring: docs/wiring/03-pitch-fader.md
+  # ⚠ OEM 5 V to fader top MUST be cut and re-fed from 3.3 V
+  # ============================================================
+  - platform: adc
+    pin: GPIO1
+    id: pitch_fader_raw
+    name: "Pitch Fader"
+    update_interval: 1ms        # 1 kHz poll
+    attenuation: 12db           # full 0–3.3 V range
+    filters:
+      - sliding_window_moving_average:
+          window_size: 8
+          send_every: 1
+      - calibrate_linear:
+          # Tune these to your fader after first-boot calibration
+          method: least_squares
+          datapoints:
+            - 0.05 -> -1.0      # bottom raw → -100 %
+            - 1.65 ->  0.0      # centre raw → 0 %
+            - 3.25 ->  1.0      # top raw → +100 %
+    on_value:
+      then:
+        - lambda: |-
+            // Send 14-bit pitchbend to Traktor
+            int14_t pb = int(x * 8192);
+            id(usb_midi_dev).send_pitchbend(0, pb);
+
+# ============================================================
+# Subsystem 02 — JOG TOUCH (Path A: S3 native cap-touch)
+# Wiring: docs/wiring/02-jog-touch.md
+# Path B/C swap-in: replace this block with binary_sensor.gpio
+# ============================================================
+esp32_touch:
+  setup_mode: false
+  measurement_duration: 0.008ms
+  sleep_duration: 0.25ms
+
+# ============================================================
+# Subsystem 04 — BUTTON MUX (2× 74HC4067, shared S0..S3)
+# Wiring: docs/wiring/04-buttons-mux.md
+# ============================================================
+cd74hc4067:
+  - id: mux_a
+    pin_s0: GPIO8
+    pin_s1: GPIO9
+    pin_s2: GPIO10
+    pin_s3: GPIO11
+  # NOTE: ESPHome's cd74hc4067 hub binds to ONE analog pin per hub at the
+  # time of writing. For two muxes sharing the select bus but reading from
+  # two different SIG GPIOs, you either:
+  #   a) Use the custom button-scan lambda below (current approach), or
+  #   b) Declare two separate hubs with the same S0..S3 pin assignment.
+  # We pick (a) for tighter scan-timing control.
+
+# ============================================================
+# Subsystem 02 + 04 + 05 — BINARY SENSORS
+# ============================================================
+binary_sensor:
+  # --- 02 jog touch (Path A) ---
+  - platform: esp32_touch
+    name: "Jog Touch"
+    pin: GPIO6
+    threshold: 1000     # tune at bring-up; lower = more sensitive
+
+  # --- 05 discrete front switches (direct GPIO) ---
+  - platform: gpio
+    name: "PLAY/PAUSE"
+    pin:
+      number: GPIO7
+      mode:
+        input: true
+        pullup: true
+      inverted: true     # active LOW
+    on_press:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_on(0, 60, 127);'
+    on_release:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_off(0, 60);'
+
+  - platform: gpio
+    name: "CUE"
+    pin:
+      number: GPIO15
+      mode: { input: true, pullup: true }
+      inverted: true
+    on_press:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_on(0, 61, 127);'
+    on_release:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_off(0, 61);'
+
+  - platform: gpio
+    name: "VINYL/CDJ Switch"
+    pin:
+      number: GPIO16
+      mode: { input: true, pullup: true }
+    # Toggle, not momentary — read state on change
+    on_state:
+      then:
+        - lambda: |-
+            id(usb_midi_dev).send_cc(0, 62, x ? 127 : 0);
+            id(vinyl_led).set_state(x);
+
+  - platform: gpio
+    name: "EJECT"
+    pin:
+      number: GPIO17
+      mode: { input: true, pullup: true }
+      inverted: true
+    on_press:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_on(0, 63, 127);'
+    on_release:
+      then:
+        - lambda: 'id(usb_midi_dev).send_note_off(0, 63);'
+
+# ============================================================
+# Subsystem 04 — BUTTON-MUX SCAN (custom lambda)
+# Wiring: docs/wiring/04-buttons-mux.md
+# Scans both muxes at 1 kHz using shared S0..S3 + separate SIG pins.
+# ============================================================
+interval:
+  - interval: 1ms
+    then:
+      - lambda: |-
+          // 1 kHz mux scan with 8-bit shift-register debounce.
+          // mux_state_a / mux_state_b are 16-bit bitmaps of pressed buttons.
+          static uint8_t shift_a[16] = {0};
+          static uint8_t shift_b[16] = {0};
+          static uint16_t state_a = 0, state_b = 0;
+          static uint16_t prev_a = 0, prev_b = 0;
+          static uint8_t ch = 0;
+
+          // Set select lines for this 1 ms tick
+          gpio_set_level(GPIO_NUM_8,  (ch >> 0) & 1);
+          gpio_set_level(GPIO_NUM_9,  (ch >> 1) & 1);
+          gpio_set_level(GPIO_NUM_10, (ch >> 2) & 1);
+          gpio_set_level(GPIO_NUM_11, (ch >> 3) & 1);
+          esp_rom_delay_us(5);
+
+          // Active LOW: invert level
+          uint8_t a = gpio_get_level(GPIO_NUM_12) ^ 1;
+          uint8_t b = gpio_get_level(GPIO_NUM_13) ^ 1;
+
+          shift_a[ch] = (shift_a[ch] << 1) | a;
+          shift_b[ch] = (shift_b[ch] << 1) | b;
+          if (shift_a[ch] == 0xFF) state_a |=  (1 << ch);
+          if (shift_a[ch] == 0x00) state_a &= ~(1 << ch);
+          if (shift_b[ch] == 0xFF) state_b |=  (1 << ch);
+          if (shift_b[ch] == 0x00) state_b &= ~(1 << ch);
+
+          // Edge detect → MIDI
+          uint16_t changed_a = state_a ^ prev_a;
+          uint16_t changed_b = state_b ^ prev_b;
+          for (int i = 0; i < 16; ++i) {
+            if (changed_a & (1 << i)) {
+              bool pressed = state_a & (1 << i);
+              id(usb_midi_dev).send_note(0, 70 + i, pressed ? 127 : 0);
+            }
+            if (changed_b & (1 << i)) {
+              bool pressed = state_b & (1 << i);
+              id(usb_midi_dev).send_note(0, 86 + i, pressed ? 127 : 0);
+            }
+          }
+          prev_a = state_a;
+          prev_b = state_b;
+          ch = (ch + 1) & 0x0F;
+
+# ============================================================
+# Subsystem 06 — LEDs
+# Wiring: docs/wiring/06-leds.md
+# All low-side N-MOSFET; GPIO HIGH = LED ON.
+# ============================================================
+output:
+  # --- Block A: OEM 12 V ring LEDs via IRLZ44N ---
+  - platform: gpio
+    id: cue_ring_led
+    pin: GPIO14
+  - platform: gpio
+    id: play_ring_led
+    pin: GPIO19
+  - platform: gpio
+    id: loop_indicator_led
+    pin: GPIO20
+
+  # --- Block C: jog vinyl LED via AO3400 ---
+  - platform: gpio
+    id: vinyl_led
+    pin: GPIO21
+
+  # --- Block B: JFLB plain LEDs via AO3400 array ---
+  - platform: gpio
+    id: jflb_led_1
+    pin: GPIO35
+  - platform: gpio
+    id: jflb_led_2
+    pin: GPIO36
+  - platform: gpio
+    id: jflb_led_3
+    pin: GPIO37
+  - platform: gpio
+    id: jflb_led_4
+    pin: GPIO38
+
+# Expose to HA as `light.cue_ring` etc. (optional, won't matter when away)
+light:
+  - platform: binary
+    name: "CUE Ring"
+    output: cue_ring_led
+  - platform: binary
+    name: "PLAY Ring"
+    output: play_ring_led
+  - platform: binary
+    name: "LOOP Indicator"
+    output: loop_indicator_led
+  - platform: binary
+    name: "Vinyl LED"
+    output: vinyl_led
+    id: vinyl_light
+  - platform: binary
+    name: "JFLB LED 1 (Vinyl Status)"
+    output: jflb_led_1
+  - platform: binary
+    name: "JFLB LED 2 (TIME/REMAIN)"
+    output: jflb_led_2
+  - platform: binary
+    name: "JFLB LED 3 (AUTO CUE)"
+    output: jflb_led_3
+  - platform: binary
+    name: "JFLB LED 4 (MEMORY)"
+    output: jflb_led_4
+
+# ============================================================
+# USB-MIDI device (custom component) — must come AFTER outputs/inputs
+# so it can reference them from on_press/on_release lambdas.
+# ============================================================
+usb_midi:
+  id: usb_midi_dev
+  manufacturer: "cdj1000 project"
+  product: "CDJ-1000MK2 controller"
+  serial: "CDJ1000MK2-0001"
