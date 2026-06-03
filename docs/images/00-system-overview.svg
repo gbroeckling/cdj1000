@@ -18,7 +18,7 @@
   </style>
 
   <text x="20" y="28" class="title">cdj1000 — System Block Diagram (v0.1)</text>
-  <text x="20" y="46" class="note">Pioneer CDJ-1000 MK1 chassis · ESP32-S3 brain · class-compliant USB-MIDI to host</text>
+  <text x="20" y="46" class="note">Pioneer CDJ-1000MK2 chassis · ESP32-S3 brain · class-compliant USB-MIDI to host</text>
 
   <!-- HOST -->
   <rect x="20" y="70" width="160" height="60" rx="8" class="blk"/>

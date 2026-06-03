@@ -1,6 +1,6 @@
 # Wiring documentation
 
-Per-subsystem wiring docs for the **Pioneer CDJ-1000 MK1 → ESP32-S3** build.
+Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (Target unit switched from MK1 to MK2 on 2026-06-03 — topology unchanged; deltas are noted inline.)
 
 ![System overview](../images/00-system-overview.svg)
 
@@ -12,7 +12,7 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000 MK1 → ESP32-S3** build.
 | 01 | Jog encoder (quadrature → PCNT) | 🚧 TBD |
 | 02 | Jog touch sheet | 🚧 TBD |
 | 03 | Pitch fader (3.3 V re-feed + ADC) | 🚧 TBD |
-| 04 | Button matrix (2× 74HC4067) | 🚧 TBD |
+| 04 | Button matrix (2–3× 74HC4067 — count incl. MK2 Hot Cue A/B/C + Hot Loop) | 🚧 TBD |
 | 05 | Discrete buttons (PLAY / CUE / VINYL) | 🚧 TBD |
 | 06 | LEDs (12 V OEM via MOSFET + WS2812 status) | 🚧 TBD |
 | 07 | [**OEM VFD reuse research**](./07-display-research.md) | ✅ v0.1 |
@@ -52,7 +52,7 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000 MK1 → ESP32-S3** build.
 
 ## Reference material
 
-- [Pioneer CDJ-1000 Service Manual (instrumentalparts.com PDF)](https://instrumentalparts.com/content/pdf/CDJ1000MK1.pdf) — PCB layouts, connector pinouts, mechanical drawings.
+- Pioneer CDJ-1000**MK2** Service Manual — doc **RRV2802**. Available via [ManualsLib](https://www.manualslib.com/manual/1059617/Pioneer-Cdj-1000mk2.html) and elektrotanya. (Different from the MK1 manual at instrumentalparts.com/content/pdf/CDJ1000MK1.pdf.)
 - [spectran CDJ-100S MIDI Adapter](https://github.com/spectran/CDJ-100S-MIDI-Adapter) — `Connection_scheme.pdf` in their `Schematics/` folder. Closest prior art at the signal-tap level. (No LICENSE file — treat as reference only, do not redistribute.)
 - [Lee Smith CDJ-1000 MK1 Teensy build — DJ TechTools 2017](https://djtechtools.com/2017/06/28/hacking-cdj-1000mk1-work-midi-controller-traktor-scratch/)
 - [pestrela/dj_maps](https://github.com/pestrela/dj_maps) — Traktor mapping reference. (MIT.)

@@ -1,14 +1,17 @@
 # 07 — Display: OEM VFD reuse research
 
-> **Question:** can we keep the CDJ-1000 MK1's original VFD and drive it from the ESP32-S3?
-> **Short answer:** technically yes, but no one's done it publicly. Every documented build removed the VFD. The engineering effort is several weekends; the aesthetic delta vs a modern OLED is modest.
+> **Question:** can we keep the CDJ-1000**MK2**'s original VFD and drive it from the ESP32-S3?
+> **Short answer:** technically yes, but no one's done it publicly for either MK1 or MK2. Every documented build removed the VFD. The engineering effort is several weekends; the aesthetic delta vs a modern OLED is modest.
+>
+> **Note:** the protocol/driver-IC notes below were originally researched for the MK1 (NEC µPD16306B on JFLB ASSY DWG1549). The MK2 service manual (doc RRV2802) lists buffer/inverter chips around the VFD (TC74VHC541FT, TC7S04FU, TC7WT241FU, TC7WU04FU) but the actual VFD driver IC part number on MK2 still needs to be read off the MK2 schematic. The MK1/MK2 conclusions are otherwise the same — see "Recommendation" below.
 
 ---
 
 ## The OEM display board
 
-- **Assembly:** JFLB ASSY, drawing DWG1549 (per service manual)
-- **Driver IC:** NEC **µPD16306B** — standard VFD driver/controller, serial bit-banged interface (clock / data / strobe / blanking). Datasheets exist but are not on clean public mirrors.
+- **MK1 assembly:** JFLB ASSY, drawing DWG1549 (per service manual)
+- **MK1 driver IC:** NEC **µPD16306B** — standard VFD driver/controller, serial bit-banged interface (clock / data / strobe / blanking). Datasheets exist but are not on clean public mirrors.
+- **MK2 display board (doc RRV2802):** uses different silicon. Buffer/inverter chips identified — TC74VHC541FT (IC405), TC7S04FU (IC407), TC7WT241FU (IC605), TC7WU04FU (IC402). The driver IC itself is **not** µPD16306B and the actual part number still needs to be read off the MK2 schematic.
 - **Glass:** custom Pioneer segments — TIME, BPM, position bar, MEMORY / CALL slots, track number. Fixed glyph vocabulary; no arbitrary pixels.
 - **Power needed by the VFD glass:**
   - Anode/grid: **−25 V to −35 V DC**
