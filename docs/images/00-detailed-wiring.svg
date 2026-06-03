@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk     { fill:#fff;    stroke:#222;    stroke-width:1.5; }
+    .esp     { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2.5; }
+    .oem     { fill:#f1f8e9; stroke:#33691e; stroke-width:1.8; }
+    .ls      { fill:#fff8e1; stroke:#f57f17; stroke-width:1.5; }
+    .mux     { fill:#f3e5f5; stroke:#6a1b9a; stroke-width:1.5; }
+    .mos     { fill:#fce4ec; stroke:#ad1457; stroke-width:1.5; }
+    .pwr-blk { fill:#fff3e0; stroke:#e65100; stroke-width:1.5; }
+    .lbl     { fill:#222; }
+    .h       { font-size:14px; font-weight:700; fill:#111; }
+    .h2      { font-size:12px; font-weight:700; fill:#333; }
+    .note    { font-size:10px; fill:#555; }
+    .pin     { font-size:11px; font-weight:600; fill:#0d47a1; }
+    .pinr    { font-size:11px; font-weight:600; fill:#c62828; }
+    .ttl     { font-size:20px; font-weight:700; fill:#111; }
+    .sub     { font-size:12px; fill:#555; }
+
+    .w5v   { stroke:#c62828; stroke-width:2; fill:none; }
+    .w3v3  { stroke:#1565c0; stroke-width:2; fill:none; }
+    .w12v  { stroke:#fbc02d; stroke-width:3; fill:none; }
+    .wgnd  { stroke:#444;    stroke-width:1.5; fill:none; stroke-dasharray:4,3; }
+    .wsig  { stroke:#0d47a1; stroke-width:1.5; fill:none; }
+    .wsigshift { stroke:#ef6c00; stroke-width:1.8; fill:none; }
+    .wled  { stroke:#ad1457; stroke-width:1.8; fill:none; }
+    .wgrp  { stroke:#0d47a1; stroke-width:4; fill:none; opacity:0.5; }
+  </style>
+
+  <text x="20" y="32" class="ttl">CDJ-1000MK2 — Master Wiring Map (v0.1)</text>
+  <text x="20" y="52" class="sub">Every signal between ESP32-S3, the carrier-board glue ICs, and the kept OEM boards. Power tree at bottom-left.</text>
+
+  <!-- ============================================================ -->
+  <!-- LEFT COLUMN: KEPT OEM BOARDS -->
+  <!-- ============================================================ -->
+
+  <!-- JOG HUB PCB -->
+  <rect x="20" y="80" width="280" height="180" rx="10" class="oem"/>
+  <text x="160" y="106" text-anchor="middle" class="h" fill="#33691e">JOG HUB PCB</text>
+  <text x="160" y="122" text-anchor="middle" class="note">part of JOGB Assy (DWG1569)</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="148" r="4" fill="#c62828"/><text x="280" y="152" text-anchor="end" class="pinr">VCC (+5 V)</text>
+    <circle cx="290" cy="166" r="4" fill="#444"/>   <text x="280" y="170" text-anchor="end" class="lbl">GND</text>
+    <circle cx="290" cy="186" r="4" fill="#0d47a1"/><text x="280" y="190" text-anchor="end" class="pin">CH A   (5 V quad)</text>
+    <circle cx="290" cy="204" r="4" fill="#0d47a1"/><text x="280" y="208" text-anchor="end" class="pin">CH B   (5 V quad)</text>
+    <circle cx="290" cy="224" r="4" fill="#0d47a1"/><text x="280" y="228" text-anchor="end" class="pin">TOUCH  (cap or sheet)</text>
+    <circle cx="290" cy="244" r="4" fill="#ad1457"/><text x="280" y="248" text-anchor="end" class="pin" fill="#ad1457">VINYL LED (cathode)</text>
+  </g>
+
+  <!-- TOP BUTTON PCB -->
+  <rect x="20" y="290" width="280" height="160" rx="10" class="oem"/>
+  <text x="160" y="316" text-anchor="middle" class="h" fill="#33691e">TOP BUTTON PCB</text>
+  <text x="160" y="332" text-anchor="middle" class="note">~12 buttons: search, tempo, time mode, jog mode</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="358" r="4" fill="#1565c0"/><text x="280" y="362" text-anchor="end" class="pin">B01..B12  (one wire per button)</text>
+    <circle cx="290" cy="374" r="4" fill="#1565c0"/><text x="280" y="378" text-anchor="end" class="pin">common (to mux SIG)</text>
+    <circle cx="290" cy="394" r="4" fill="#444"/>   <text x="280" y="398" text-anchor="end" class="lbl">GND (common return)</text>
+  </g>
+  <text x="160" y="424" text-anchor="middle" class="note">→ rewired to mux A inputs 0..11</text>
+
+  <!-- HOT CUE / LOOP PCB -->
+  <rect x="20" y="480" width="280" height="160" rx="10" class="oem"/>
+  <text x="160" y="506" text-anchor="middle" class="h" fill="#33691e">HOT CUE + LOOP PCB(s)</text>
+  <text x="160" y="522" text-anchor="middle" class="note">MK2: HOT CUE A/B/C, REC MODE, LOOP IN/OUT,</text>
+  <text x="160" y="538" text-anchor="middle" class="note">RELOOP, HOT LOOP, MEMORY, DELETE, MP3 FLDR</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="568" r="4" fill="#1565c0"/><text x="280" y="572" text-anchor="end" class="pin">B13..B20  (8 buttons)</text>
+    <circle cx="290" cy="584" r="4" fill="#1565c0"/><text x="280" y="588" text-anchor="end" class="pin">common (to mux SIG)</text>
+    <circle cx="290" cy="604" r="4" fill="#444"/>   <text x="280" y="608" text-anchor="end" class="lbl">GND</text>
+  </g>
+  <text x="160" y="630" text-anchor="middle" class="note">→ rewired to mux B inputs 0..7</text>
+
+  <!-- PITCH FADER -->
+  <rect x="20" y="670" width="280" height="100" rx="10" class="oem"/>
+  <text x="160" y="696" text-anchor="middle" class="h" fill="#33691e">PITCH FADER</text>
+  <text x="160" y="712" text-anchor="middle" class="note">100 mm linear pot</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="734" r="4" fill="#1565c0"/><text x="280" y="738" text-anchor="end" class="pin">VCC = 3.3 V  (NOT OEM 5 V!)</text>
+    <circle cx="290" cy="752" r="4" fill="#ef6c00"/><text x="280" y="756" text-anchor="end" class="pin" fill="#ef6c00">WIPER → S3 ADC</text>
+    <circle cx="290" cy="770" r="4" fill="#444"/>   <text x="280" y="774" text-anchor="end" class="lbl">GND</text>
+  </g>
+
+  <!-- DISPLAY BOARD (JFLB) — LED reuse only -->
+  <rect x="20" y="800" width="280" height="170" rx="10" class="oem"/>
+  <text x="160" y="826" text-anchor="middle" class="h" fill="#33691e">DISPLAY BOARD — LED reuse only</text>
+  <text x="160" y="842" text-anchor="middle" class="note">JFLB Assy = DWG1568</text>
+  <text x="160" y="858" text-anchor="middle" class="note">VFD glass + µPD16306B (IC1201): DARK in v0.1</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="290" cy="884" r="4" fill="#ad1457"/><text x="280" y="888" text-anchor="end" class="pin" fill="#ad1457">LED 1 cathode  (vinyl status?)</text>
+    <circle cx="290" cy="902" r="4" fill="#ad1457"/><text x="280" y="906" text-anchor="end" class="pin" fill="#ad1457">LED 2 cathode  (TIME/REMAIN)</text>
+    <circle cx="290" cy="920" r="4" fill="#ad1457"/><text x="280" y="924" text-anchor="end" class="pin" fill="#ad1457">LED 3 cathode  (A.CUE)</text>
+    <circle cx="290" cy="938" r="4" fill="#ad1457"/><text x="280" y="942" text-anchor="end" class="pin" fill="#ad1457">LED 4 cathode  (MEMORY)</text>
+    <circle cx="290" cy="956" r="4" fill="#ad1457"/><text x="280" y="960" text-anchor="end" class="pin" fill="#ad1457">LED 5 cathode  (TEMPO RANGE)</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- DISCRETE BUTTONS + LED RAIL (TOP MIDDLE) -->
+  <!-- ============================================================ -->
+
+  <rect x="350" y="80" width="240" height="130" rx="10" class="oem"/>
+  <text x="470" y="106" text-anchor="middle" class="h" fill="#33691e">DISCRETE INPUTS</text>
+  <text x="470" y="122" text-anchor="middle" class="note">no mux — direct GPIO</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="350" cy="148" r="4" fill="#1565c0"/><text x="362" y="152" class="pin">PLAY / PAUSE</text>
+    <circle cx="350" cy="166" r="4" fill="#1565c0"/><text x="362" y="170" class="pin">CUE</text>
+    <circle cx="350" cy="184" r="4" fill="#1565c0"/><text x="362" y="188" class="pin">VINYL / CDJ switch</text>
+    <circle cx="350" cy="202" r="4" fill="#1565c0"/><text x="362" y="206" class="pin">EJECT</text>
+  </g>
+
+  <rect x="350" y="240" width="240" height="170" rx="10" class="oem"/>
+  <text x="470" y="266" text-anchor="middle" class="h" fill="#33691e">OEM 12 V LEDs</text>
+  <text x="470" y="282" text-anchor="middle" class="note">CUE / PLAY / LOOP "ring" indicators</text>
+  <text x="470" y="298" text-anchor="middle" class="note">stay on OEM 12 V rail; switched</text>
+  <text x="470" y="314" text-anchor="middle" class="note">low-side by IRLZ44N MOSFETs</text>
+
+  <g font-size="11" font-weight="600">
+    <circle cx="350" cy="340" r="4" fill="#fbc02d"/><text x="362" y="344" class="pin" fill="#f57f17">CUE LED rail   (12 V)</text>
+    <circle cx="350" cy="358" r="4" fill="#fbc02d"/><text x="362" y="362" class="pin" fill="#f57f17">PLAY LED rail (12 V)</text>
+    <circle cx="350" cy="376" r="4" fill="#fbc02d"/><text x="362" y="380" class="pin" fill="#f57f17">LOOP LED rail (12 V)</text>
+    <circle cx="350" cy="394" r="4" fill="#444"/>   <text x="362" y="398" class="lbl">12 V rail return → MOSFET drains</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- CENTRE: GLUE ICs ON CARRIER PCB -->
+  <!-- ============================================================ -->
+
+  <rect x="350" y="440" width="430" height="430" rx="12" fill="#fafafa" stroke="#666" stroke-width="1.5"/>
+  <text x="565" y="464" text-anchor="middle" class="h">CARRIER PCB — glue between OEM boards and S3</text>
+  <text x="565" y="480" text-anchor="middle" class="note">small custom PCB mounted where DWX2305 MAIN was</text>
+
+  <!-- TXS0108E -->
+  <rect x="370" y="500" width="180" height="80" rx="6" class="ls"/>
+  <text x="460" y="522" text-anchor="middle" class="h2" fill="#f57f17">TXS0108E</text>
+  <text x="460" y="538" text-anchor="middle" class="note">5 V ↔ 3.3 V bidir</text>
+  <text x="460" y="554" text-anchor="middle" class="note">CH A (in) → GPIO 4</text>
+  <text x="460" y="570" text-anchor="middle" class="note">CH B (in) → GPIO 5</text>
+
+  <!-- Mux A -->
+  <rect x="370" y="600" width="180" height="80" rx="6" class="mux"/>
+  <text x="460" y="622" text-anchor="middle" class="h2" fill="#6a1b9a">74HC4067 (A)</text>
+  <text x="460" y="638" text-anchor="middle" class="note">16 → 1 mux  · 3.3 V logic</text>
+  <text x="460" y="654" text-anchor="middle" class="note">inputs: TOP BUTTON 0..11</text>
+  <text x="460" y="670" text-anchor="middle" class="note">SIG → GPIO 12</text>
+
+  <!-- Mux B -->
+  <rect x="370" y="700" width="180" height="80" rx="6" class="mux"/>
+  <text x="460" y="722" text-anchor="middle" class="h2" fill="#6a1b9a">74HC4067 (B)</text>
+  <text x="460" y="738" text-anchor="middle" class="note">16 → 1 mux  · 3.3 V logic</text>
+  <text x="460" y="754" text-anchor="middle" class="note">inputs: HOT CUE / LOOP 0..7</text>
+  <text x="460" y="770" text-anchor="middle" class="note">SIG → GPIO 13 (or 18 — see GPIO map)</text>
+
+  <!-- Mux select bus -->
+  <rect x="370" y="800" width="180" height="50" rx="6" fill="#fff" stroke="#6a1b9a"/>
+  <text x="460" y="822" text-anchor="middle" class="note">S0..S3 = GPIO 8 / 9 / 10 / 11</text>
+  <text x="460" y="838" text-anchor="middle" class="note">shared between mux A and mux B</text>
+
+  <!-- MOSFETs -->
+  <rect x="570" y="500" width="180" height="180" rx="6" class="mos"/>
+  <text x="660" y="522" text-anchor="middle" class="h2" fill="#ad1457">MOSFET array</text>
+  <text x="660" y="538" text-anchor="middle" class="note">low-side N-channel:</text>
+  <text x="660" y="556" text-anchor="middle" class="note">3 × IRLZ44N for 12 V rails</text>
+  <text x="660" y="572" text-anchor="middle" class="note">5 × AO3400 SOT-23 for</text>
+  <text x="660" y="588" text-anchor="middle" class="note">JFLB plain LEDs</text>
+  <text x="660" y="608" text-anchor="middle" class="note">+ 1 × AO3400 for jog VINYL</text>
+  <text x="660" y="628" text-anchor="middle" class="note">gates from S3 GPIOs:</text>
+  <text x="660" y="644" text-anchor="middle" class="note">19, 20, 21, 35, 36, 37, 38, 39, 40</text>
+  <text x="660" y="660" text-anchor="middle" class="note">(reassign as final map locks)</text>
+
+  <!-- Touch front-end -->
+  <rect x="570" y="700" width="180" height="80" rx="6" class="blk"/>
+  <text x="660" y="722" text-anchor="middle" class="h2">JOG TOUCH front-end</text>
+  <text x="660" y="738" text-anchor="middle" class="note">if cap-sheet → S3 native</text>
+  <text x="660" y="754" text-anchor="middle" class="note">TOUCH_PAD on GPIO 6</text>
+  <text x="660" y="770" text-anchor="middle" class="note">if pressure → comparator + GPIO 6</text>
+
+  <!-- ============================================================ -->
+  <!-- RIGHT: ESP32-S3 -->
+  <!-- ============================================================ -->
+
+  <rect x="820" y="120" width="380" height="650" rx="12" class="esp"/>
+  <text x="1010" y="148" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 DevKitC-1 (N16R8)</text>
+  <text x="1010" y="164" text-anchor="middle" class="note">16 MB flash · 8 MB PSRAM · TinyUSB MIDI · 3.3 V GPIO</text>
+
+  <!-- USB -->
+  <rect x="850" y="180" width="320" height="40" rx="6" fill="#fff" stroke="#1565c0"/>
+  <text x="1010" y="205" text-anchor="middle" class="pin">USB-C  →  host PC (USB-MIDI class compliant via TinyUSB)</text>
+
+  <!-- Pin table -->
+  <g font-size="11" font-weight="600">
+    <text x="840" y="246" class="h2">PIN  FUNCTION</text>
+
+    <text x="840" y="270" class="pin">GPIO 1</text>  <text x="900" y="270" class="lbl">pitch fader wiper → ADC1_CH0</text>
+    <text x="840" y="288" class="pin">GPIO 4</text>  <text x="900" y="288" class="lbl">jog CH A (via TXS)  → PCNT0 SIG</text>
+    <text x="840" y="306" class="pin">GPIO 5</text>  <text x="900" y="306" class="lbl">jog CH B (via TXS)  → PCNT0 CTRL</text>
+    <text x="840" y="324" class="pin">GPIO 6</text>  <text x="900" y="324" class="lbl">jog touch sense     (cap-touch or comp)</text>
+    <text x="840" y="342" class="pin">GPIO 7</text>  <text x="900" y="342" class="lbl">PLAY/PAUSE button   (direct, pull-up)</text>
+
+    <text x="840" y="366" class="pin">GPIO 8</text>  <text x="900" y="366" class="lbl">mux S0  (shared A+B)</text>
+    <text x="840" y="384" class="pin">GPIO 9</text>  <text x="900" y="384" class="lbl">mux S1</text>
+    <text x="840" y="402" class="pin">GPIO 10</text> <text x="900" y="402" class="lbl">mux S2</text>
+    <text x="840" y="420" class="pin">GPIO 11</text> <text x="900" y="420" class="lbl">mux S3</text>
+
+    <text x="840" y="444" class="pin">GPIO 12</text> <text x="900" y="444" class="lbl">mux A SIG  (TOP buttons)</text>
+    <text x="840" y="462" class="pin">GPIO 13</text> <text x="900" y="462" class="lbl">mux B SIG  (HOT CUE / LOOP)</text>
+
+    <text x="840" y="486" class="pin">GPIO 14</text> <text x="900" y="486" class="lbl">CUE LED MOSFET gate   (12 V rail switch)</text>
+    <text x="840" y="504" class="pin">GPIO 15</text> <text x="900" y="504" class="lbl">CUE button  (direct)</text>
+    <text x="840" y="522" class="pin">GPIO 16</text> <text x="900" y="522" class="lbl">VINYL/CDJ switch   (direct)</text>
+    <text x="840" y="540" class="pin">GPIO 17</text> <text x="900" y="540" class="lbl">EJECT  (direct, or moved to mux)</text>
+    <text x="840" y="558" class="pin">GPIO 18</text> <text x="900" y="558" class="lbl">spare / reserved</text>
+
+    <text x="840" y="582" class="pin">GPIO 19</text> <text x="900" y="582" class="lbl">PLAY LED MOSFET gate  (12 V)</text>
+    <text x="840" y="600" class="pin">GPIO 20</text> <text x="900" y="600" class="lbl">LOOP LED MOSFET gate  (12 V)</text>
+    <text x="840" y="618" class="pin">GPIO 21</text> <text x="900" y="618" class="lbl">VINYL-LED MOSFET gate (jog hub, low-V)</text>
+
+    <text x="840" y="642" class="pin">GPIO 35</text> <text x="900" y="642" class="lbl">JFLB LED 1 gate (TIME/REMAIN)</text>
+    <text x="840" y="660" class="pin">GPIO 36</text> <text x="900" y="660" class="lbl">JFLB LED 2 gate (A.CUE)</text>
+    <text x="840" y="678" class="pin">GPIO 37</text> <text x="900" y="678" class="lbl">JFLB LED 3 gate (MEMORY)</text>
+    <text x="840" y="696" class="pin">GPIO 38</text> <text x="900" y="696" class="lbl">JFLB LED 4 gate (TEMPO RANGE)</text>
+    <text x="840" y="714" class="pin">GPIO 39</text> <text x="900" y="714" class="lbl">JFLB LED 5 gate (spare mode LED)</text>
+
+    <text x="840" y="738" class="note">GPIO 40+ = spare. JTAG (39/40/41/42), strap pins (0/45/46) avoid.</text>
+    <text x="840" y="754" class="note">3 V3 / 5 V / GND pads on the DevKit's perimeter headers.</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- POWER TREE (BOTTOM CENTRE) -->
+  <!-- ============================================================ -->
+
+  <rect x="20" y="990" width="0" height="0"/>
+  <rect x="350" y="880" width="430" height="120" rx="10" class="pwr-blk"/>
+  <text x="565" y="906" text-anchor="middle" class="h" fill="#e65100">POWER TREE (v0.1: USB-bus only)</text>
+
+  <g font-size="11">
+    <text x="365" y="928" class="pinr">USB 5 V (VBUS)</text>
+    <text x="365" y="944" class="note">  → S3 DevKit on-board 3.3 V LDO (logic, mux, sensors, ADC ref)</text>
+    <text x="365" y="958" class="note">  → jog encoder VCC (TXS0108E A-side)</text>
+    <text x="365" y="972" class="note">  → MT3608 boost → 12 V (CUE / PLAY / LOOP OEM LED rail)</text>
+    <text x="365" y="986" class="note">  Star ground at the USB-C jack return. Analog GND for fader split if needed.</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- WIRES — from kept boards to carrier ICs to S3 -->
+  <!-- ============================================================ -->
+
+  <!-- Jog hub: VCC 5V from USB rail -->
+  <path d="M290 148 H 700 V 60 H 1180 V 195 H 1170" class="w5v"/>
+  <text x="970" y="55" class="note" fill="#c62828">+5 V to encoder VCC</text>
+
+  <!-- Jog hub: CH A → TXS A1 → GPIO 4 -->
+  <path d="M290 186 H 360 V 540 H 370" class="wsig"/>
+  <path d="M550 540 H 820" class="wsigshift"/>
+  <text x="650" y="535" class="note" fill="#ef6c00">3.3 V level-shifted CH A → GPIO 4</text>
+
+  <!-- Jog hub: CH B → TXS A2 → GPIO 5 -->
+  <path d="M290 204 H 355 V 558 H 370" class="wsig"/>
+  <path d="M550 558 H 820" class="wsigshift"/>
+
+  <!-- Jog hub: TOUCH → touch front-end → GPIO 6 -->
+  <path d="M290 224 H 560 V 720 H 570" class="wsig"/>
+  <path d="M750 720 H 770 V 324 H 820" class="wsigshift"/>
+
+  <!-- Jog hub: VINYL LED cathode → MOSFET drain → S3 GPIO 21 (low side switch) -->
+  <path d="M290 244 H 565 V 580 H 570" class="wled"/>
+  <text x="305" y="240" class="note" fill="#ad1457">vinyl LED low-side switch</text>
+
+  <!-- Top buttons → mux A inputs (single bundle) -->
+  <path d="M290 374 H 360 V 640 H 370" class="wgrp"/>
+  <text x="305" y="370" class="note">12-wire bundle to mux A inputs 0..11</text>
+
+  <!-- Hot cue / loop → mux B inputs -->
+  <path d="M290 584 H 360 V 740 H 370" class="wgrp"/>
+  <text x="305" y="580" class="note">8-wire bundle to mux B inputs 0..7</text>
+
+  <!-- Mux A SIG → GPIO 12 -->
+  <path d="M550 640 H 820 V 444" class="wsig"/>
+
+  <!-- Mux B SIG → GPIO 13 -->
+  <path d="M550 740 H 800 V 462 H 820" class="wsig"/>
+
+  <!-- Mux select S0..S3 → GPIO 8..11 -->
+  <path d="M550 825 H 810 V 366 H 820" class="wgrp"/>
+  <text x="700" y="820" class="note">4-wire select bus S0..S3 → GPIO 8/9/10/11</text>
+
+  <!-- Pitch fader: 3.3V to fader top -->
+  <path d="M290 734 H 330 V 460 H 820" class="w3v3"/>
+  <text x="500" y="455" class="note" fill="#1565c0">3.3 V to fader VCC (cut OEM 5 V!)</text>
+
+  <!-- Pitch wiper → GPIO 1 -->
+  <path d="M290 752 H 340 V 270 H 820" class="wsigshift"/>
+  <text x="500" y="266" class="note" fill="#ef6c00">wiper → ADC1_CH0 (GPIO 1)</text>
+
+  <!-- Pitch GND -->
+  <path d="M290 770 H 320 V 870 H 820 V 740" class="wgnd"/>
+
+  <!-- Discrete inputs → S3 direct -->
+  <path d="M590 148 H 820 V 342" class="wsig"/>
+  <text x="600" y="143" class="note">PLAY → GPIO 7</text>
+
+  <path d="M590 166 H 800 V 504 H 820" class="wsig"/>
+  <path d="M590 184 H 790 V 522 H 820" class="wsig"/>
+  <path d="M590 202 H 780 V 540 H 820" class="wsig"/>
+
+  <!-- 12V LEDs → MOSFET drains → S3 gates -->
+  <path d="M590 340 H 770 V 486 H 820" class="w12v"/>
+  <text x="600" y="335" class="note" fill="#f57f17">CUE 12 V → MOSFET → GPIO 14 gate</text>
+
+  <path d="M590 358 H 760 V 582 H 820" class="w12v"/>
+  <path d="M590 376 H 750 V 600 H 820" class="w12v"/>
+  <path d="M590 394 H 740 V 540 H 740" class="wgnd"/>
+
+  <!-- JFLB LEDs → MOSFETs → S3 gates -->
+  <path d="M300 884 H 565 V 642 H 820" class="wled"/>
+  <path d="M300 902 H 560 V 660 H 820" class="wled"/>
+  <path d="M300 920 H 555 V 678 H 820" class="wled"/>
+  <path d="M300 938 H 550 V 696 H 820" class="wled"/>
+  <path d="M300 956 H 545 V 714 H 820" class="wled"/>
+
+  <!-- Small legend for wire colours bottom-right -->
+  <rect x="820" y="800" width="380" height="190" rx="10" fill="#fff" stroke="#888"/>
+  <text x="1010" y="826" text-anchor="middle" class="h">WIRE LEGEND</text>
+
+  <line x1="840" y1="848" x2="900" y2="848" class="w5v"/>
+  <text x="910" y="852" class="note">5 V power (USB VBUS) → encoder + TXS A-side</text>
+
+  <line x1="840" y1="868" x2="900" y2="868" class="w3v3"/>
+  <text x="910" y="872" class="note">3.3 V power (S3 LDO) → mux, fader, sensors</text>
+
+  <line x1="840" y1="888" x2="900" y2="888" class="w12v"/>
+  <text x="910" y="892" class="note">12 V LED rail (MT3608 boost from 5 V)</text>
+
+  <line x1="840" y1="908" x2="900" y2="908" class="wgnd"/>
+  <text x="910" y="912" class="note">GND (star at USB-C return)</text>
+
+  <line x1="840" y1="928" x2="900" y2="928" class="wsig"/>
+  <text x="910" y="932" class="note">signal (3.3 V CMOS)</text>
+
+  <line x1="840" y1="948" x2="900" y2="948" class="wsigshift"/>
+  <text x="910" y="952" class="note">level-shifted signal (was 5 V, now 3.3 V)</text>
+
+  <line x1="840" y1="968" x2="900" y2="968" class="wled"/>
+  <text x="910" y="972" class="note">LED low-side switch (MOSFET drain)</text>
+
+  <line x1="840" y1="985" x2="900" y2="985" class="wgrp"/>
+  <text x="910" y="989" class="note">wire bundle (multiple signals)</text>
+</svg>

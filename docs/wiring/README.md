@@ -8,7 +8,8 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (T
 
 | # | Subsystem | Status |
 |---|---|---|
-| 00 | [System overview](#system-overview) — block diagram (SVG above) | ✅ v0.1 |
+| 00 | [**Master board map**](./00-board-map.md) — physical layout + full wiring + per-board breakdown | ✅ v0.1 |
+| 00b | System overview block diagram (SVG above) | ✅ v0.1 |
 | 01 | [Jog encoder (quadrature → TXS0108E → PCNT)](./01-jog-encoder.md) | ✅ v0.1 |
 | 02 | Jog touch sheet | 🚧 TBD |
 | 03 | Pitch fader (3.3 V re-feed + ADC) | 🚧 TBD |
