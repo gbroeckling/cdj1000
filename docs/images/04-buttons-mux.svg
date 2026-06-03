@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 880" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk  { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .oem  { fill:#f1f8e9; stroke:#33691e; stroke-width:1.8; }
+    .esp  { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2; }
+    .mux  { fill:#f3e5f5; stroke:#6a1b9a; stroke-width:2; }
+    .title{ font-size:18px; font-weight:700; fill:#111; }
+    .h    { font-size:14px; font-weight:700; fill:#111; }
+    .note { font-size:11px; fill:#555; }
+    .small{ font-size:10px; fill:#555; }
+    .pin  { font-size:11px; font-weight:600; fill:#0d47a1; }
+    .red  { fill:#c62828; }
+    .pwr3 { stroke:#1565c0; stroke-width:2; fill:none; }
+    .gnd  { stroke:#444; stroke-width:1.5; stroke-dasharray:4,3; fill:none; }
+    .sig  { stroke:#0d47a1; stroke-width:1.5; fill:none; }
+    .selbus { stroke:#6a1b9a; stroke-width:3.5; fill:none; opacity:0.5; }
+    .pin-num { font-size:10px; font-weight:700; fill:#6a1b9a; }
+  </style>
+
+  <text x="20" y="28" class="title">04 — Button Matrix Wiring (2 × 74HC4067)</text>
+  <text x="20" y="46" class="note">~22 buttons on the kept OEM button PCBs (DWX2306, DWS1365, hot cue / loop cluster) → 2 × 16-ch muxes → S3 GPIO 12 + 13. Shared 4-bit select bus.</text>
+
+  <!-- ============================================================ -->
+  <!-- BUTTON SOURCES (LEFT) -->
+  <!-- ============================================================ -->
+
+  <!-- Top Button PCB DWX2306 -->
+  <rect x="20" y="80" width="300" height="280" rx="10" class="oem"/>
+  <text x="170" y="106" text-anchor="middle" class="h" fill="#33691e">TOP BUTTON PCB · DWX 2306</text>
+  <text x="170" y="122" text-anchor="middle" class="small">silkscreen: "DWX 2306 KSWB"</text>
+
+  <g font-size="11">
+    <text x="35" y="148" class="pin">TRACK SEARCH ◁</text> <text x="275" y="148" text-anchor="end" class="pin-num">→ mux A ch 0</text>
+    <text x="35" y="164" class="pin">TRACK SEARCH ▷</text> <text x="275" y="164" text-anchor="end" class="pin-num">→ mux A ch 1</text>
+    <text x="35" y="180" class="pin">SEARCH ◁</text>        <text x="275" y="180" text-anchor="end" class="pin-num">→ mux A ch 2</text>
+    <text x="35" y="196" class="pin">SEARCH ▷</text>        <text x="275" y="196" text-anchor="end" class="pin-num">→ mux A ch 3</text>
+    <text x="35" y="212" class="pin">TEMPO RANGE</text>     <text x="275" y="212" text-anchor="end" class="pin-num">→ mux A ch 4</text>
+    <text x="35" y="228" class="pin">MASTER TEMPO</text>    <text x="275" y="228" text-anchor="end" class="pin-num">→ mux A ch 5</text>
+    <text x="35" y="244" class="pin">TEMPO RESET</text>     <text x="275" y="244" text-anchor="end" class="pin-num">→ mux A ch 6</text>
+    <text x="35" y="260" class="pin">TIME MODE / AUTO CUE</text> <text x="275" y="260" text-anchor="end" class="pin-num">→ mux A ch 7</text>
+    <text x="35" y="276" class="pin">TEXT MODE</text>       <text x="275" y="276" text-anchor="end" class="pin-num">→ mux A ch 8</text>
+    <text x="35" y="292" class="pin">JOG MODE (CDJ / VINYL)</text> <text x="275" y="292" text-anchor="end" class="pin-num">→ mux A ch 9</text>
+    <text x="35" y="308" class="pin">DIRECTION (FWD / REV)</text>  <text x="275" y="308" text-anchor="end" class="pin-num">→ mux A ch 10</text>
+    <text x="35" y="324" class="pin">MP3 FLDR SEARCH ◁</text> <text x="275" y="324" text-anchor="end" class="pin-num">→ mux A ch 11</text>
+    <text x="35" y="340" class="pin">MP3 FLDR SEARCH ▷</text> <text x="275" y="340" text-anchor="end" class="pin-num">→ mux A ch 12</text>
+    <text x="35" y="354" class="small">mux A ch 13..15: spare</text>
+  </g>
+
+  <!-- Hot Cue PCB -->
+  <rect x="20" y="380" width="300" height="160" rx="10" class="oem"/>
+  <text x="170" y="406" text-anchor="middle" class="h" fill="#33691e">HOT CUE PCB (MK2)</text>
+  <text x="170" y="420" text-anchor="middle" class="small">DWX-number TBD; covers A/B/C + REC</text>
+
+  <g font-size="11">
+    <text x="35" y="446" class="pin">HOT CUE A</text> <text x="275" y="446" text-anchor="end" class="pin-num">→ mux B ch 0</text>
+    <text x="35" y="462" class="pin">HOT CUE B</text> <text x="275" y="462" text-anchor="end" class="pin-num">→ mux B ch 1</text>
+    <text x="35" y="478" class="pin">HOT CUE C</text> <text x="275" y="478" text-anchor="end" class="pin-num">→ mux B ch 2</text>
+    <text x="35" y="494" class="pin">REC MODE</text>  <text x="275" y="494" text-anchor="end" class="pin-num">→ mux B ch 3</text>
+    <text x="35" y="514" class="small">Hot Cue A/B/C are unique to MK2.</text>
+    <text x="35" y="528" class="small">MK1 had none of these.</text>
+  </g>
+
+  <!-- Loop PCB -->
+  <rect x="20" y="560" width="300" height="170" rx="10" class="oem"/>
+  <text x="170" y="586" text-anchor="middle" class="h" fill="#33691e">LOOP PCB (+ DWS1365 KSWB 1/2)</text>
+  <text x="170" y="600" text-anchor="middle" class="small">DWS1365 silkscreen confirmed; cluster TBD</text>
+
+  <g font-size="11">
+    <text x="35" y="626" class="pin">LOOP IN</text>      <text x="275" y="626" text-anchor="end" class="pin-num">→ mux B ch 4</text>
+    <text x="35" y="642" class="pin">LOOP OUT</text>     <text x="275" y="642" text-anchor="end" class="pin-num">→ mux B ch 5</text>
+    <text x="35" y="658" class="pin">RELOOP / EXIT</text><text x="275" y="658" text-anchor="end" class="pin-num">→ mux B ch 6</text>
+    <text x="35" y="674" class="pin">HOT LOOP (MK2)</text><text x="275" y="674" text-anchor="end" class="pin-num">→ mux B ch 7</text>
+    <text x="35" y="690" class="pin">CUE/LOOP CALL ◁</text> <text x="275" y="690" text-anchor="end" class="pin-num">→ mux B ch 8</text>
+    <text x="35" y="706" class="pin">CUE/LOOP CALL ▷</text> <text x="275" y="706" text-anchor="end" class="pin-num">→ mux B ch 9</text>
+  </g>
+
+  <!-- Memory PCB -->
+  <rect x="20" y="750" width="300" height="110" rx="10" class="oem"/>
+  <text x="170" y="776" text-anchor="middle" class="h" fill="#33691e">MEMORY / DELETE cluster</text>
+
+  <g font-size="11">
+    <text x="35" y="800" class="pin">MEMORY</text>  <text x="275" y="800" text-anchor="end" class="pin-num">→ mux B ch 10</text>
+    <text x="35" y="816" class="pin">DELETE</text>  <text x="275" y="816" text-anchor="end" class="pin-num">→ mux B ch 11</text>
+    <text x="35" y="834" class="small">mux B ch 12..15: spare</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- MUX A -->
+  <!-- ============================================================ -->
+  <rect x="400" y="120" width="220" height="280" rx="10" class="mux"/>
+  <text x="510" y="146" text-anchor="middle" class="h" fill="#6a1b9a">74HC4067 — MUX A</text>
+  <text x="510" y="162" text-anchor="middle" class="note">TOP BUTTON inputs 0..12</text>
+
+  <g font-size="11">
+    <text x="415" y="190" class="pin">C0..C15</text>  <text x="605" y="190" text-anchor="end" class="small">← buttons</text>
+    <text x="415" y="210" class="pin">S0..S3</text>   <text x="605" y="210" text-anchor="end" class="small">select</text>
+    <text x="415" y="230" class="pin">E̅</text>        <text x="605" y="230" text-anchor="end" class="small">tie LOW (always enabled)</text>
+    <text x="415" y="250" class="pin">VCC = 3.3 V</text>
+    <text x="415" y="270" class="pin">GND</text>
+    <text x="415" y="290" class="pin">SIG → GPIO 12</text>
+  </g>
+
+  <text x="510" y="320" text-anchor="middle" class="small">100 nF decoupling near VCC pin</text>
+  <text x="510" y="338" text-anchor="middle" class="small">10 kΩ pull-up on SIG to 3.3 V</text>
+  <text x="510" y="356" text-anchor="middle" class="small">(no per-channel pull-ups needed)</text>
+  <text x="510" y="380" text-anchor="middle" class="note" font-weight="700">analog R_on ≈ 70 Ω · scan rate &lt; 1 µs / channel</text>
+
+  <!-- ============================================================ -->
+  <!-- MUX B -->
+  <!-- ============================================================ -->
+  <rect x="400" y="440" width="220" height="280" rx="10" class="mux"/>
+  <text x="510" y="466" text-anchor="middle" class="h" fill="#6a1b9a">74HC4067 — MUX B</text>
+  <text x="510" y="482" text-anchor="middle" class="note">HOT CUE + LOOP + MEMORY 0..11</text>
+
+  <g font-size="11">
+    <text x="415" y="510" class="pin">C0..C15</text>  <text x="605" y="510" text-anchor="end" class="small">← buttons</text>
+    <text x="415" y="530" class="pin">S0..S3</text>   <text x="605" y="530" text-anchor="end" class="small">select (shared w/ A)</text>
+    <text x="415" y="550" class="pin">E̅</text>        <text x="605" y="550" text-anchor="end" class="small">tie LOW</text>
+    <text x="415" y="570" class="pin">VCC = 3.3 V</text>
+    <text x="415" y="590" class="pin">GND</text>
+    <text x="415" y="610" class="pin">SIG → GPIO 13</text>
+  </g>
+
+  <text x="510" y="640" text-anchor="middle" class="small">decoupling + pull-up same as MUX A</text>
+  <text x="510" y="658" text-anchor="middle" class="small">tie unused inputs (ch 12..15) to GND</text>
+  <text x="510" y="680" text-anchor="middle" class="note" font-weight="700">both muxes share S0..S3 → 1 read of both per cycle</text>
+
+  <!-- ============================================================ -->
+  <!-- ESP32-S3 -->
+  <!-- ============================================================ -->
+  <rect x="780" y="120" width="500" height="600" rx="12" class="esp"/>
+  <text x="1030" y="148" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 DevKitC-1</text>
+  <text x="1030" y="164" text-anchor="middle" class="note">internal pull-up on SIG GPIOs (backup)</text>
+
+  <g font-size="11" font-weight="600">
+    <text x="800" y="200" class="pin">GPIO 8</text>  <text x="870" y="200" class="lbl">→ S0 (LSB)</text>
+    <text x="800" y="218" class="pin">GPIO 9</text>  <text x="870" y="218" class="lbl">→ S1</text>
+    <text x="800" y="236" class="pin">GPIO 10</text> <text x="870" y="236" class="lbl">→ S2</text>
+    <text x="800" y="254" class="pin">GPIO 11</text> <text x="870" y="254" class="lbl">→ S3 (MSB)</text>
+    <text x="800" y="278" class="pin">GPIO 12</text> <text x="870" y="278" class="lbl">← MUX A SIG (TOP buttons)</text>
+    <text x="800" y="296" class="pin">GPIO 13</text> <text x="870" y="296" class="lbl">← MUX B SIG (HOT CUE / LOOP)</text>
+  </g>
+
+  <!-- Scan algorithm -->
+  <rect x="800" y="330" width="460" height="370" rx="8" fill="#fff" stroke="#1565c0"/>
+  <text x="1030" y="354" text-anchor="middle" class="h" fill="#0d47a1">Scan algorithm (1 kHz outer loop)</text>
+
+  <text x="815" y="380" class="small" font-weight="700">for ch in 0..15:</text>
+  <text x="835" y="396" class="small">gpio_set_level(S0, ch &amp; 1);</text>
+  <text x="835" y="412" class="small">gpio_set_level(S1, (ch &gt;&gt; 1) &amp; 1);</text>
+  <text x="835" y="428" class="small">gpio_set_level(S2, (ch &gt;&gt; 2) &amp; 1);</text>
+  <text x="835" y="444" class="small">gpio_set_level(S3, (ch &gt;&gt; 3) &amp; 1);</text>
+  <text x="835" y="460" class="small">esp_rom_delay_us(5);  /* mux settle */</text>
+  <text x="835" y="476" class="small">a = gpio_get_level(MUX_A_SIG);</text>
+  <text x="835" y="492" class="small">b = gpio_get_level(MUX_B_SIG);</text>
+  <text x="835" y="508" class="small">/* both muxes share select → read both */</text>
+  <text x="835" y="524" class="small">debounce_state[A][ch] = shift_in(a);</text>
+  <text x="835" y="540" class="small">debounce_state[B][ch] = shift_in(b);</text>
+
+  <text x="815" y="570" class="small">debounce: 4-deep shift register per channel</text>
+  <text x="815" y="586" class="small">  0xF → released  ·  0x0 → pressed  ·  else: in transition</text>
+
+  <text x="815" y="610" class="small">total cycle: 16 × (5 µs settle + 2 GPIO reads) ≈ 100 µs</text>
+  <text x="815" y="626" class="small">→ 10 kHz raw scan, easy 1 kHz reported updates</text>
+
+  <text x="815" y="654" class="small" font-weight="700">edge events → MIDI:</text>
+  <text x="815" y="670" class="small">  release-to-press: send Note On / CC value 127</text>
+  <text x="815" y="686" class="small">  press-to-release: send Note Off / CC value 0</text>
+
+  <!-- ============================================================ -->
+  <!-- WIRES -->
+  <!-- ============================================================ -->
+
+  <!-- Shared S0..S3 from S3 to both muxes (as a bus) -->
+  <path d="M800 220 H 750 V 220 H 620" class="selbus"/>
+  <path d="M750 220 V 540 H 620" class="selbus"/>
+
+  <!-- SIG MUX A → GPIO 12 -->
+  <path d="M620 290 H 720 V 278 H 800" class="sig"/>
+  <!-- SIG MUX B → GPIO 13 -->
+  <path d="M620 610 H 720 V 296 H 800" class="sig"/>
+
+  <!-- Buttons → MUX A inputs (single bundle) -->
+  <rect x="325" y="200" width="70" height="30" rx="6" fill="#fff" stroke="#33691e"/>
+  <text x="360" y="219" text-anchor="middle" class="small">12-wire bundle</text>
+  <path d="M320 220 H 400" class="sig"/>
+
+  <!-- Buttons → MUX B inputs (single bundle) -->
+  <rect x="325" y="540" width="70" height="30" rx="6" fill="#fff" stroke="#33691e"/>
+  <text x="360" y="559" text-anchor="middle" class="small">12-wire bundle</text>
+  <path d="M320 560 H 400" class="sig"/>
+
+  <!-- 3.3V to both muxes -->
+  <path d="M800 250 H 780 V 95 H 510 V 248" class="pwr3"/>
+  <path d="M510 95 V 568" class="pwr3"/>
+
+  <!-- GND to both muxes -->
+  <path d="M800 270 H 770 V 105 H 530 V 268" class="gnd"/>
+  <path d="M530 105 V 588" class="gnd"/>
+
+  <!-- ============================================================ -->
+  <!-- 3rd-mux escape hatch -->
+  <!-- ============================================================ -->
+  <rect x="800" y="730" width="460" height="120" rx="10" class="blk"/>
+  <text x="1030" y="754" text-anchor="middle" class="h">If MK2 button count exceeds 32: add MUX C</text>
+  <text x="815" y="778" class="small">• MUX C = 3rd 74HC4067 on the carrier PCB</text>
+  <text x="815" y="794" class="small">• reuses the same shared S0..S3 bus (GPIO 8..11)</text>
+  <text x="815" y="810" class="small">• SIG → GPIO 18 (spare in v0.1 GPIO map)</text>
+  <text x="815" y="826" class="small">• cycle time changes from 16 to 16 reads × 3 = ~150 µs</text>
+  <text x="815" y="842" class="small">• firmware: extend the inner loop with a third gpio_get_level call</text>
+</svg>
