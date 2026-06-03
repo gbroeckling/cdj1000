@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .esp { fill:#e8f5ff; stroke:#1565c0; stroke-width:2; }
+    .pwr { fill:#fff3e0; stroke:#e65100; stroke-width:1.5; }
+    .oem { fill:#f1f8e9; stroke:#33691e; stroke-width:1.5; }
+    .ls { fill:#fff8e1; stroke:#f57f17; stroke-width:1.5; }
+    .lbl { fill:#222; }
+    .pin { fill:#0d47a1; font-weight:600; }
+    .sig5 { stroke:#c62828; stroke-width:2; fill:none; }
+    .sig3 { stroke:#1565c0; stroke-width:2; fill:none; }
+    .pwr5 { stroke:#c62828; stroke-width:2; fill:none; }
+    .pwr3 { stroke:#1565c0; stroke-width:2; fill:none; }
+    .gnd { stroke:#444; stroke-width:1.5; fill:none; }
+    .title { font-size:18px; font-weight:700; fill:#111; }
+    .h { font-size:14px; font-weight:700; fill:#111; }
+    .note { font-size:11px; fill:#555; }
+    .dot { fill:#222; }
+    .red { fill:#c62828; }
+    .blue { fill:#1565c0; }
+  </style>
+
+  <text x="20" y="28" class="title">01 — Jog Encoder Wiring</text>
+  <text x="20" y="46" class="note">OEM optical quadrature → TXS0108E level shift (5 V → 3.3 V) → ESP32-S3 PCNT</text>
+
+  <!-- OEM Encoder block -->
+  <rect x="40" y="90" width="240" height="220" rx="10" class="oem"/>
+  <text x="160" y="116" text-anchor="middle" class="h" fill="#33691e">OEM JOG ENCODER</text>
+  <text x="160" y="134" text-anchor="middle" class="note">Optical quadrature, 135 frames/rev</text>
+  <text x="160" y="150" text-anchor="middle" class="note">MK1: DEC2498 plate / DWG1569 assy</text>
+  <text x="160" y="166" text-anchor="middle" class="note">MK2: verify from RRV2802 manual</text>
+  <text x="160" y="190" text-anchor="middle" class="note">— pads / wires —</text>
+
+  <!-- encoder pads -->
+  <g font-size="12">
+    <circle cx="270" cy="220" r="4" class="red"/>
+    <text x="190" y="224" text-anchor="end" class="pin" fill="#c62828">VCC (+5 V)</text>
+    <circle cx="270" cy="250" r="4" class="dot"/>
+    <text x="190" y="254" text-anchor="end" class="pin">GND</text>
+    <circle cx="270" cy="280" r="4" class="blue"/>
+    <text x="190" y="284" text-anchor="end" class="pin" fill="#1565c0">CH A (5 V logic)</text>
+    <circle cx="270" cy="305" r="4" class="blue"/>
+    <text x="190" y="309" text-anchor="end" class="pin" fill="#1565c0">CH B (5 V logic)</text>
+  </g>
+
+  <!-- TXS0108E -->
+  <rect x="430" y="170" width="180" height="170" rx="8" class="ls"/>
+  <text x="520" y="194" text-anchor="middle" class="h" fill="#f57f17">TXS0108E</text>
+  <text x="520" y="210" text-anchor="middle" class="note">bidir level translator</text>
+  <text x="520" y="224" text-anchor="middle" class="note">8 channels (2 used)</text>
+
+  <!-- A-side (5V) pins -->
+  <g font-size="11">
+    <text x="438" y="252" text-anchor="start" class="pin" fill="#c62828">VCCA = 5 V</text>
+    <text x="438" y="270" text-anchor="start" class="pin">A1 (CH A in)</text>
+    <text x="438" y="288" text-anchor="start" class="pin">A2 (CH B in)</text>
+    <text x="438" y="306" text-anchor="start" class="pin">OE = 3 V3</text>
+    <text x="438" y="324" text-anchor="start" class="pin">GND</text>
+
+    <!-- B-side (3V3) pins -->
+    <text x="602" y="252" text-anchor="end" class="pin" fill="#1565c0">VCCB = 3 V3</text>
+    <text x="602" y="270" text-anchor="end" class="pin">B1 (to GPIO4)</text>
+    <text x="602" y="288" text-anchor="end" class="pin">B2 (to GPIO5)</text>
+  </g>
+
+  <!-- ESP32-S3 -->
+  <rect x="800" y="160" width="260" height="200" rx="10" class="esp"/>
+  <text x="930" y="184" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 DevKitC-1</text>
+  <text x="930" y="200" text-anchor="middle" class="note">PCNT (Pulse Counter) unit 0</text>
+
+  <g font-size="12">
+    <circle cx="810" cy="240" r="4" class="red"/>
+    <text x="820" y="244" class="pin" fill="#c62828">5 V (USB VBUS)</text>
+    <circle cx="810" cy="265" r="4" class="blue"/>
+    <text x="820" y="269" class="pin" fill="#1565c0">3 V3 (LDO out)</text>
+    <circle cx="810" cy="290" r="4" class="dot"/>
+    <text x="820" y="294" class="pin">GND</text>
+
+    <circle cx="810" cy="320" r="4" class="blue"/>
+    <text x="820" y="324" class="pin">GPIO4 → PCNT0_SIG (CH A)</text>
+    <circle cx="810" cy="345" r="4" class="blue"/>
+    <text x="820" y="349" class="pin">GPIO5 → PCNT0_CTRL (CH B)</text>
+  </g>
+
+  <!-- Wires -->
+  <!-- 5V from S3 to encoder VCC -->
+  <line x1="810" y1="240" x2="700" y2="240" class="pwr5"/>
+  <line x1="700" y1="240" x2="700" y2="130" class="pwr5"/>
+  <line x1="700" y1="130" x2="20" y2="130" class="pwr5"/>
+  <line x1="20" y1="130" x2="20" y2="220" class="pwr5"/>
+  <line x1="20" y1="220" x2="270" y2="220" class="pwr5"/>
+  <text x="350" y="124" class="note" fill="#c62828">+5 V from USB VBUS to encoder VCC</text>
+
+  <!-- 5V to TXS0108E VCCA -->
+  <line x1="700" y1="130" x2="700" y2="252" class="pwr5"/>
+  <line x1="700" y1="252" x2="438" y2="252" class="pwr5"/>
+
+  <!-- 3V3 from S3 to TXS0108E VCCB + OE -->
+  <line x1="810" y1="265" x2="640" y2="265" class="pwr3"/>
+  <line x1="640" y1="265" x2="640" y2="252" class="pwr3"/>
+  <line x1="640" y1="252" x2="602" y2="252" class="pwr3"/>
+
+  <line x1="640" y1="265" x2="640" y2="306" class="pwr3"/>
+  <line x1="640" y1="306" x2="438" y2="306" class="pwr3"/>
+
+  <!-- GND -->
+  <line x1="810" y1="290" x2="640" y2="290" class="gnd"/>
+  <line x1="640" y1="290" x2="640" y2="324" class="gnd"/>
+  <line x1="640" y1="324" x2="438" y2="324" class="gnd"/>
+  <line x1="438" y1="324" x2="420" y2="324" class="gnd"/>
+  <line x1="420" y1="324" x2="420" y2="250" class="gnd"/>
+  <line x1="420" y1="250" x2="270" y2="250" class="gnd"/>
+
+  <!-- CH A: encoder -> TXS A1 -->
+  <line x1="270" y1="280" x2="350" y2="280" class="sig5"/>
+  <line x1="350" y1="280" x2="350" y2="270" class="sig5"/>
+  <line x1="350" y1="270" x2="438" y2="270" class="sig5"/>
+
+  <!-- CH B: encoder -> TXS A2 -->
+  <line x1="270" y1="305" x2="370" y2="305" class="sig5"/>
+  <line x1="370" y1="305" x2="370" y2="288" class="sig5"/>
+  <line x1="370" y1="288" x2="438" y2="288" class="sig5"/>
+
+  <!-- TXS B1 -> GPIO4 -->
+  <line x1="602" y1="270" x2="720" y2="270" class="sig3"/>
+  <line x1="720" y1="270" x2="720" y2="320" class="sig3"/>
+  <line x1="720" y1="320" x2="810" y2="320" class="sig3"/>
+
+  <!-- TXS B2 -> GPIO5 -->
+  <line x1="602" y1="288" x2="740" y2="288" class="sig3"/>
+  <line x1="740" y1="288" x2="740" y2="345" class="sig3"/>
+  <line x1="740" y1="345" x2="810" y2="345" class="sig3"/>
+
+  <!-- TXS notes -->
+  <text x="430" y="362" class="note">A-side auto-direction sensing; no extra dir pin.</text>
+
+  <!-- Decoupling caps -->
+  <g>
+    <rect x="688" y="380" width="180" height="36" rx="4" fill="#fff" stroke="#777"/>
+    <text x="778" y="403" text-anchor="middle" class="note">Decoupling: 0.1 µF on VCCA + VCCB</text>
+  </g>
+
+  <!-- Quadrature diagram -->
+  <rect x="40" y="380" width="640" height="220" rx="8" fill="#fafafa" stroke="#bbb"/>
+  <text x="60" y="404" class="h">Quadrature timing — what the S3 sees</text>
+  <text x="60" y="422" class="note">CH A leads CH B by 90° → forward rotation (CW). CH B leads CH A → reverse (CCW).</text>
+  <text x="60" y="438" class="note">PCNT counts edges of CH A; CH B is the direction control. 135 frames × 4 edges = 540 counts/rev (4× mode).</text>
+
+  <!-- waveforms -->
+  <g font-size="11">
+    <!-- CH A trace -->
+    <text x="60" y="468" class="pin" fill="#1565c0">CH A</text>
+    <polyline points="100,475 140,475 140,455 180,455 180,475 220,475 220,455 260,455 260,475 300,475 300,455 340,455 340,475 380,475 380,455 420,455 420,475 460,475 460,455 500,455 500,475 540,475 540,455 580,455 580,475 620,475" class="sig5" fill="none"/>
+
+    <!-- CH B trace, offset -->
+    <text x="60" y="508" class="pin" fill="#1565c0">CH B</text>
+    <polyline points="100,515 120,515 120,495 160,495 160,515 200,515 200,495 240,495 240,515 280,515 280,495 320,495 320,515 360,515 360,495 400,495 400,515 440,515 440,495 480,495 480,515 520,515 520,495 560,495 560,515 600,515 600,495 620,495" class="sig5" fill="none"/>
+
+    <!-- Direction arrows -->
+    <text x="100" y="540" class="note">→ forward (CW)</text>
+    <text x="520" y="540" class="note">CH B leads CH A → reverse direction</text>
+
+    <!-- Position counter sample -->
+    <text x="60" y="568" class="pin">PCNT</text>
+    <text x="100" y="568" class="note">+1   +2   +3   +4   +5   +6   +7   +8   +9   +10   +11   +12   +13</text>
+    <text x="60" y="588" class="note">Reset / rollover handled in firmware. PPR (pulses-per-rev) needs MK2-verified value.</text>
+  </g>
+
+  <!-- Right-side notes -->
+  <rect x="700" y="430" width="380" height="160" rx="8" fill="#fff" stroke="#b71c1c" stroke-width="1.5"/>
+  <text x="720" y="454" class="h" fill="#b71c1c">⚠ Critical</text>
+  <text x="720" y="474" class="note">1. S3 GPIOs are NOT 5 V tolerant. NEVER tie raw encoder CH A/B</text>
+  <text x="720" y="488" class="note">   to GPIO directly. Always go via TXS0108E (or 74LVC1T45 pair).</text>
+  <text x="720" y="506" class="note">2. TXS0108E OE must be pulled to 3 V3 to enable; tie OE → 3 V3</text>
+  <text x="720" y="520" class="note">   directly or via 10 kΩ pull-up to leave routing flexible.</text>
+  <text x="720" y="538" class="note">3. Encoder VCC = OEM 5 V rail. If you DON'T keep the OEM PSU,</text>
+  <text x="720" y="552" class="note">   feed encoder VCC from the S3 USB VBUS (200 mA OK).</text>
+  <text x="720" y="570" class="note">4. Keep CH A / CH B traces short and twisted with GND return.</text>
+  <text x="720" y="584" class="note">   Optical encoders are clean, but EMI from CD-drive bay is not.</text>
+</svg>
