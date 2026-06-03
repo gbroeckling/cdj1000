@@ -131,8 +131,8 @@ sensor:
 
 | Component | Purpose | Status |
 |---|---|---|
-| `usb_midi` | USB-MIDI class device via TinyUSB | 🚧 scaffolded in this commit, build out next |
-| `jog_quadrature` | 2-channel quadrature decode via PCNT | 🚧 scaffolded |
+| `usb_midi` | USB-MIDI class device via TinyUSB | ✅ v0.1 implementation — see [`components/usb_midi/README.md`](components/usb_midi/README.md) |
+| `jog_quadrature` | 2-channel quadrature decode via PCNT | 🚧 next |
 | `cdj_protocol` (v0.2) | OEM panel↔main frame emitter (jog cursor / mode LEDs on OEM VFD) | 📋 deferred — see `../docs/wiring/08-display.md` |
 
 ---
