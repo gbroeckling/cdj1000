@@ -119,14 +119,6 @@ The `jog_read_delta()` call is what your MIDI emitter polls every ~1 ms; the del
 
 ---
 
-## Mechanical / electrical sanity checks before final assembly
-
-1. **Verify edge cleanliness with a scope.** Optical encoders are usually clean, but bay EMI (CD drive servo, switching PSU) can put glitches on the CH A / B lines. If you see ringing, add a 100 pF ceramic from each line to GND **on the 5 V side of TXS0108E** (not the 3.3 V side — that's downstream of the buffer's slew control).
-2. **Confirm direction.** Spin the platter clockwise (DJ "forward") and watch the PCNT counter. Positive count = correct. If it's negative, swap the edge actions in firmware (or swap CH A/B wiring).
-3. **Slow + fast tests.** Bedroom-speed jog and full-speed cue scratch. At full scratch the encoder can output well above 10 kHz on each channel; TXS0108E handles ~1 MHz without issue.
-
----
-
 ## MK2-specific open items
 
 - [ ] Read the MK2 jog encoder part number off the service manual (RRV2802) and confirm DWG1569 vs the MK2 number

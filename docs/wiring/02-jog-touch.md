@@ -30,7 +30,6 @@ Bench check picks one. Don't wire all three.
    - Line **capacitance changes** on touch (you'll need a scope or an LCR meter to see this — a multimeter won't pick it up) → **cap sheet** → **Path A**
    - Line is a **clean digital high/low toggle** on touch (no analog behaviour, square edges) → **Pioneer already conditioned it** → **Path C**
 3. **Lock the path in firmware** per the table above.
-4. **Real-world test**: bedroom-speed touch on/off, then a hard scratch-grip, then a wet/oily finger. All three should reliably toggle. If only the dry slow press works, the threshold is wrong (Path A) or the comparator hysteresis is too tight (Path B).
 
 ---
 

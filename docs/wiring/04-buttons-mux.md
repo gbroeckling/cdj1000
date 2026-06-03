@@ -171,15 +171,6 @@ If a final bench-verified count of MK2 buttons pushes either side beyond its 16-
 
 ---
 
-## Real-world sanity checks
-
-1. **Single-button isolation**: scan with no buttons pressed; the state vectors should both be `0x0000` forever. Any phantom bits → check that unused channels are tied to GND.
-2. **Ghost-press check**: press combos (HOT CUE A + B + C simultaneously) and confirm only the right bits flip. If pressing one mux-A button shows a phantom press on mux-B, your shared select bus has a noise problem — shorten the select traces or add 100 pF caps to GND on each select line.
-3. **Bounce check**: fire all buttons one by one while logging raw `gpio_get_level` values. Should show clean transitions after 8 ms. If you see ringing past 8 ms, lengthen the shift register to 12 bits.
-4. **Latency check**: connect to Traktor and slap HOT CUE A → audible cue should fire within 10–15 ms. If it's slow, scan loop rate is wrong.
-
----
-
 ## MK2-specific open items
 
 - [ ] Final button count from the MK2 bench-open inventory (resolves whether MUX C is needed)

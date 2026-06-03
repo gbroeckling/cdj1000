@@ -117,15 +117,6 @@ If Traktor's pitch-bend resolution feels coarse, switch to the 14-bit CC pair (C
 
 ---
 
-## Real-world sanity checks
-
-1. **Centre detent**: with the fader at the detent, the reported value should sit at 0 ± dead-zone forever. If it drifts, the calibration `centre_raw` is wrong — re-run it.
-2. **End-stop linearity**: sweep slowly top-to-bottom while logging values. The curve should be straight. A bend at the top means you forgot to cut the 5 V trace (clipping at ~3.3 V × 2048 = 2048 raw counts).
-3. **Tap test**: tap the fader body. The reported value should not jump. If it does, the ground return isn't tight enough — shorten the GND wire and use a star tie.
-4. **MIDI smoothness**: connect to Traktor and pitch up a track. The pitch should slew continuously, no zipper noise. Zipper means the 8-tap average isn't running, or you're sampling slower than 1 kHz.
-
----
-
 ## MK2-specific open items
 
 - [ ] Confirm OEM fader part number from RRV2802 (parts list lookup)
