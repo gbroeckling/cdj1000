@@ -8,6 +8,32 @@ Resurrect a Pioneer CDJ-1000MK2 (2003, no native USB/MIDI) as a class-compliant 
 
 ---
 
+## Block diagrams
+
+The two master views first; per-subsystem schematics live under [`docs/images/`](docs/images/) and are linked from the wiring index in [`docs/wiring/README.md`](docs/wiring/README.md).
+
+### Physical chassis layout — what stays, what's gutted
+
+![Top-down chassis layout — keep/remove/S3 footprint, MK2 DWG numbers on each kept board](docs/images/00-physical-layout.svg)
+
+### Master wiring map — every signal between S3 and the kept OEM boards
+
+![Master signal + power topology — kept OEM boards (left), carrier-PCB glue ICs (centre), ESP32-S3 with GPIO map (right), power tree (bottom)](docs/images/00-detailed-wiring.svg)
+
+### Per-subsystem schematics
+
+| Subsystem | Doc | Diagram |
+|---|---|---|
+| Master board map | [00-board-map.md](docs/wiring/00-board-map.md) | [physical](docs/images/00-physical-layout.svg) · [wiring](docs/images/00-detailed-wiring.svg) · [system overview](docs/images/00-system-overview.svg) |
+| 01 Jog encoder | [01-jog-encoder.md](docs/wiring/01-jog-encoder.md) | [SVG](docs/images/01-jog-encoder.svg) |
+| 02 Jog touch | [02-jog-touch.md](docs/wiring/02-jog-touch.md) | [SVG](docs/images/02-jog-touch.svg) |
+| 03 Pitch fader | [03-pitch-fader.md](docs/wiring/03-pitch-fader.md) | [SVG](docs/images/03-pitch-fader.svg) |
+| 04 Button mux | [04-buttons-mux.md](docs/wiring/04-buttons-mux.md) | [SVG](docs/images/04-buttons-mux.svg) |
+| 07 Display research (historical) | [07-display-research.md](docs/wiring/07-display-research.md) | — |
+| 08 Display v0.1 plan | [08-display.md](docs/wiring/08-display.md) | — |
+
+---
+
 ## Why ESP32-S3 (not Teensy)
 
 Prior community builds (Lee Smith / DJLegionUK) used Teensy 3.6. The S3 wins on:
