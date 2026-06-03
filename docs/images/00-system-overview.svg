@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .esp { fill:#e8f5ff; stroke:#1565c0; stroke-width:2; }
+    .pwr { fill:#fff3e0; stroke:#e65100; stroke-width:1.5; }
+    .oem { fill:#f1f8e9; stroke:#33691e; stroke-width:1.5; }
+    .lbl { fill:#222; }
+    .lbl-w { fill:#fff; font-weight:700; }
+    .pin { fill:#0d47a1; font-weight:600; }
+    .sig { stroke:#1565c0; stroke-width:1.5; fill:none; }
+    .pwr-l { stroke:#e65100; stroke-width:1.5; fill:none; }
+    .gnd-l { stroke:#444; stroke-width:1.5; stroke-dasharray:4,3; fill:none; }
+    .ls { stroke:#ef6c00; stroke-width:2; fill:none; }
+    .title { font-size:18px; font-weight:700; fill:#111; }
+    .h { font-size:14px; font-weight:700; fill:#111; }
+    .note { font-size:11px; fill:#555; }
+  </style>
+
+  <text x="20" y="28" class="title">cdj1000 — System Block Diagram (v0.1)</text>
+  <text x="20" y="46" class="note">Pioneer CDJ-1000 MK1 chassis · ESP32-S3 brain · class-compliant USB-MIDI to host</text>
+
+  <!-- HOST -->
+  <rect x="20" y="70" width="160" height="60" rx="8" class="blk"/>
+  <text x="100" y="98" text-anchor="middle" class="h">HOST PC</text>
+  <text x="100" y="116" text-anchor="middle" class="note">Traktor Pro 4 · BOME · TSI map</text>
+
+  <!-- USB -->
+  <line x1="180" y1="100" x2="240" y2="100" class="sig"/>
+  <text x="210" y="92" text-anchor="middle" class="note">USB 2.0 FS · class-compliant MIDI</text>
+
+  <!-- ESP32-S3 -->
+  <rect x="240" y="60" width="380" height="220" rx="10" class="esp"/>
+  <text x="430" y="86" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 DevKitC-1 (N16R8)</text>
+  <text x="430" y="104" text-anchor="middle" class="note">16 MB flash · 8 MB PSRAM · TinyUSB USB-MIDI</text>
+
+  <!-- ESP32 peripheral pills -->
+  <g font-size="11">
+    <rect x="260" y="120" width="100" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="310" y="138" text-anchor="middle" class="pin">PCNT (jog)</text>
+
+    <rect x="368" y="120" width="100" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="418" y="138" text-anchor="middle" class="pin">ADC1 (fader)</text>
+
+    <rect x="476" y="120" width="120" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="536" y="138" text-anchor="middle" class="pin">GPIO matrix → 4067</text>
+
+    <rect x="260" y="160" width="120" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="320" y="178" text-anchor="middle" class="pin">RMT (WS2812)</text>
+
+    <rect x="388" y="160" width="100" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="438" y="178" text-anchor="middle" class="pin">SPI (display)</text>
+
+    <rect x="496" y="160" width="100" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="546" y="178" text-anchor="middle" class="pin">I²C (OLED)</text>
+
+    <rect x="260" y="200" width="160" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="340" y="218" text-anchor="middle" class="pin">USB-OTG (TinyUSB MIDI)</text>
+
+    <rect x="428" y="200" width="168" height="28" rx="4" fill="#fff" stroke="#1565c0"/>
+    <text x="512" y="218" text-anchor="middle" class="pin">GPIO discrete + LED drive</text>
+  </g>
+  <text x="260" y="260" class="note">3.3 V logic. NOT 5 V tolerant.</text>
+  <text x="260" y="275" class="note">Touch sense optional via S3 native cap-touch GPIO.</text>
+
+  <!-- Level shifter -->
+  <rect x="660" y="80" width="120" height="48" rx="6" class="pwr"/>
+  <text x="720" y="100" text-anchor="middle" class="h" fill="#e65100">TXS0108E</text>
+  <text x="720" y="118" text-anchor="middle" class="note">5 V ↔ 3.3 V bidir</text>
+
+  <!-- Jog encoder -->
+  <rect x="820" y="60" width="240" height="86" rx="8" class="oem"/>
+  <text x="940" y="86" text-anchor="middle" class="h" fill="#33691e">JOG ENCODER (OEM)</text>
+  <text x="940" y="104" text-anchor="middle" class="note">DEC2498 plate · DWG1569 assy</text>
+  <text x="940" y="120" text-anchor="middle" class="note">Optical quadrature · 135 frames/rev</text>
+  <text x="940" y="136" text-anchor="middle" class="note">5 V supply</text>
+
+  <!-- jog encoder wiring -->
+  <line x1="620" y1="134" x2="660" y2="100" class="ls"/>
+  <text x="640" y="90" class="note">CHA/B</text>
+  <line x1="780" y1="100" x2="820" y2="100" class="sig"/>
+
+  <!-- Jog touch -->
+  <rect x="820" y="160" width="240" height="56" rx="8" class="oem"/>
+  <text x="940" y="184" text-anchor="middle" class="h" fill="#33691e">JOG TOUCH SHEET</text>
+  <text x="940" y="202" text-anchor="middle" class="note">DSX1060 — verify cap vs pressure</text>
+  <line x1="620" y1="174" x2="820" y2="188" class="sig"/>
+  <text x="700" y="170" class="note">GPIO6</text>
+
+  <!-- Pitch fader -->
+  <rect x="820" y="230" width="240" height="60" rx="8" class="oem"/>
+  <text x="940" y="252" text-anchor="middle" class="h" fill="#33691e">PITCH FADER</text>
+  <text x="940" y="268" text-anchor="middle" class="note">100 mm linear pot</text>
+  <text x="940" y="282" text-anchor="middle" class="note">cut OEM 5 V → re-feed 3.3 V</text>
+  <line x1="620" y1="200" x2="820" y2="260" class="sig"/>
+  <text x="700" y="240" class="note">ADC1_CH0 (GPIO1)</text>
+
+  <!-- Buttons / mux -->
+  <rect x="20" y="310" width="380" height="120" rx="8" class="oem"/>
+  <text x="210" y="334" text-anchor="middle" class="h" fill="#33691e">OEM BUTTON PCBs</text>
+  <text x="210" y="352" text-anchor="middle" class="note">hot cues · loop in/out · reloop · track/search</text>
+  <text x="210" y="368" text-anchor="middle" class="note">tempo range · master tempo · time · direction</text>
+  <text x="210" y="384" text-anchor="middle" class="note">cue/loop call · memory · delete · jog mode · vinyl/CDJ</text>
+  <text x="210" y="408" text-anchor="middle" class="note">~16+ contacts → 2× 74HC4067 16:1 multiplexers</text>
+
+  <!-- mux -->
+  <rect x="430" y="320" width="190" height="100" rx="6" class="pwr"/>
+  <text x="525" y="344" text-anchor="middle" class="h" fill="#e65100">2× 74HC4067</text>
+  <text x="525" y="362" text-anchor="middle" class="note">S0–S3 shared (GPIO 8/9/10/11)</text>
+  <text x="525" y="378" text-anchor="middle" class="note">SIG-A = GPIO 12</text>
+  <text x="525" y="394" text-anchor="middle" class="note">SIG-B = GPIO 13 (shared w/ WS2812 — TBD)</text>
+  <text x="525" y="410" text-anchor="middle" class="note">3.3 V logic, internal pulls</text>
+
+  <line x1="400" y1="370" x2="430" y2="370" class="sig"/>
+  <line x1="620" y1="370" x2="660" y2="370" class="sig"/>
+
+  <!-- Discrete buttons -->
+  <rect x="660" y="310" width="220" height="60" rx="8" class="oem"/>
+  <text x="770" y="332" text-anchor="middle" class="h" fill="#33691e">DISCRETE INPUTS</text>
+  <text x="770" y="348" text-anchor="middle" class="note">PLAY/PAUSE → GPIO7</text>
+  <text x="770" y="362" text-anchor="middle" class="note">CUE → GPIO15 · VINYL/CDJ → GPIO16</text>
+
+  <!-- OEM LEDs -->
+  <rect x="660" y="385" width="220" height="58" rx="8" class="oem"/>
+  <text x="770" y="406" text-anchor="middle" class="h" fill="#33691e">OEM LEDs (12 V)</text>
+  <text x="770" y="421" text-anchor="middle" class="note">CUE / PLAY / LOOP</text>
+  <text x="770" y="435" text-anchor="middle" class="note">→ IRLZ44N low-side from GPIO</text>
+
+  <!-- WS2812 -->
+  <rect x="900" y="310" width="180" height="50" rx="8" class="blk"/>
+  <text x="990" y="332" text-anchor="middle" class="h">WS2812 strip</text>
+  <text x="990" y="348" text-anchor="middle" class="note">status / pad RGB · GPIO13 RMT</text>
+
+  <!-- Display -->
+  <rect x="900" y="370" width="180" height="74" rx="8" class="blk"/>
+  <text x="990" y="392" text-anchor="middle" class="h">Display (opt)</text>
+  <text x="990" y="408" text-anchor="middle" class="note">A: GC9A01 SPI (jog ctr)</text>
+  <text x="990" y="422" text-anchor="middle" class="note">B: SSD1306 OLED I²C</text>
+  <text x="990" y="436" text-anchor="middle" class="note">decision pending</text>
+
+  <!-- POWER block -->
+  <rect x="20" y="470" width="1060" height="230" rx="10" class="pwr"/>
+  <text x="40" y="498" class="h" fill="#e65100">POWER · USB-bus first, star-ground</text>
+
+  <!-- USB power -->
+  <rect x="40" y="514" width="160" height="50" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="120" y="536" text-anchor="middle" class="h">USB 5 V (VBUS)</text>
+  <text x="120" y="552" text-anchor="middle" class="note">USB-C on dev board</text>
+
+  <line x1="200" y1="538" x2="240" y2="538" class="pwr-l"/>
+
+  <rect x="240" y="514" width="160" height="50" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="320" y="536" text-anchor="middle" class="h">3.3 V LDO (on-board)</text>
+  <text x="320" y="552" text-anchor="middle" class="note">ESP32 · MUX · sensors · ADC ref</text>
+
+  <line x1="200" y1="540" x2="240" y2="590" class="pwr-l"/>
+
+  <rect x="240" y="580" width="160" height="56" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="320" y="602" text-anchor="middle" class="h">MT3608 → 12 V boost</text>
+  <text x="320" y="618" text-anchor="middle" class="note">OEM LED rail only</text>
+  <text x="320" y="632" text-anchor="middle" class="note">disable if external 12 V DC barrel used</text>
+
+  <!-- consumers -->
+  <line x1="400" y1="540" x2="450" y2="540" class="pwr-l"/>
+  <rect x="450" y="514" width="170" height="50" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="535" y="536" text-anchor="middle" class="note">ESP32-S3 · 4067 muxes · encoder front-end · fader top</text>
+
+  <line x1="400" y1="608" x2="450" y2="608" class="pwr-l"/>
+  <rect x="450" y="582" width="170" height="50" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="535" y="604" text-anchor="middle" class="note">OEM CUE/PLAY/LOOP LED rail</text>
+  <text x="535" y="620" text-anchor="middle" class="note">switched low-side by MOSFET</text>
+
+  <!-- 5V encoder -->
+  <line x1="200" y1="538" x2="220" y2="538" class="pwr-l"/>
+  <line x1="220" y1="538" x2="220" y2="668" class="pwr-l"/>
+  <line x1="220" y1="668" x2="700" y2="668" class="pwr-l"/>
+  <rect x="700" y="654" width="220" height="34" rx="6" fill="#fff" stroke="#e65100"/>
+  <text x="810" y="675" text-anchor="middle" class="note">5 V → jog encoder VCC (level-shifted IO)</text>
+
+  <!-- GND -->
+  <line x1="40" y1="690" x2="1060" y2="690" class="gnd-l"/>
+  <text x="50" y="685" class="note">GND — single star point at PSU return; do not daisy-chain across boards</text>
+
+  <!-- Caution -->
+  <rect x="700" y="514" width="380" height="120" rx="8" fill="#fff" stroke="#b71c1c" stroke-width="1.5"/>
+  <text x="720" y="538" class="h" fill="#b71c1c">⚠ Critical wiring rules</text>
+  <text x="720" y="558" class="note">1. Cut OEM 5 V to pitch slider; re-feed 3.3 V (ADC 0–3.3 V only).</text>
+  <text x="720" y="574" class="note">2. Encoder CHA/CHB are 5 V — level-shift before S3 GPIO.</text>
+  <text x="720" y="590" class="note">3. OEM LEDs are 12 V — drive via logic-level MOSFET (IRLZ44N).</text>
+  <text x="720" y="606" class="note">4. USB-bus power is marginal with 12 V boost; prefer DC barrel if LEDs always-on.</text>
+  <text x="720" y="622" class="note">5. Star ground at PSU; analog ground separate where possible.</text>
+</svg>
