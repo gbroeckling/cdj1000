@@ -105,7 +105,7 @@ Local clones of the three GitHub repos live under `references/` (gitignored).
 4. Lock final GPIO map after button count — MK2 may need a 3rd 4067 mux
 5. **JFLB LED audit** — when the unit is open, trace the JFLB board to identify which indicators are plain LEDs (not VFD segments). The "vinyl" indicator (blue glow) is almost certainly an LED; expect 1–3 more (mode indicators). LEDs get wired to S3 GPIO via small MOSFETs.
 6. **Jog-centre protocol-byte capture** — *before* disassembly. Logic-analyzer the MK2 panel↔main ribbon at known jog positions; locate the 1-byte position cursor (1..135 + animation codes per djgreeb's MK3 doc). Document for v0.2. **The capture window closes the moment the OEM mainboard comes out.**
-7. Firmware path — ESP-IDF + TinyUSB MIDI **vs** Arduino-ESP32 + Adafruit TinyUSB.
+7. ~~Firmware path~~ — **CLOSED**: ESPHome on esp-idf framework + custom `usb_midi` and `jog_quadrature` external components. Resilient WiFi/API config so the deck never reboots when away from home. See [`firmware/README.md`](firmware/README.md).
 
 ### Closed for v0.1
 
