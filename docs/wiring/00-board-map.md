@@ -220,10 +220,6 @@ The reference photos in `/Images/` are the working visual baseline for board pos
 - `Screenshot 2026-06-03 135345.png` — additional KSWB button cluster (silkscreen partially visible).
 - `Screenshot 2026-06-03 135523.png` / `135553.png` — CD optical pickup assembly (removed with the drive).
 
-### Mind the contamination
-
-- `Screenshot 2026-06-03 135404.png` is a **CDJ-900** button strip (silkscreen `DWX3548 CDJ-900 KSWB Assy`), **not** the CDJ-1000MK2. Layout is similar — useful as a topology reference for the long top-button strip pattern — but the part number and exact button complement differ from the MK2. Don't read MK2 GPIO assignments off this photo.
-
 ### Source caveat
 
 Most of these are eBay / parts-supplier listings (watermarks visible: nbspares, soundservice.gr, djresource.eu). Commodity reference photos — fine for identifying silkscreen part numbers and topology. Garry's own teardown photos (when he gets the units back from loan) will replace them as the annotated source of truth for connector designators (`CN800`, `CN801`, etc.).
