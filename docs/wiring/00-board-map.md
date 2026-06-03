@@ -22,24 +22,23 @@ Every wire between the ESP32-S3 and the kept OEM boards in the CDJ-1000MK2, in o
 
 ---
 
-## Boards we KEEP (with MK2 part references from RRV2802)
-
-The service manual parts list confirmed:
+## Boards we KEEP (MK2 part references — silkscreen + RRV2802 confirmed)
 
 | Board / Assembly | Drawing # | What we use it for | Notes |
 |---|---|---|---|
-| **JOGB Assy** (jog wheel) | **DWG1569** | Optical encoder + touch sense + vinyl LED | Same DWG as MK1 — Pioneer kept the jog mechanism |
-| JOG A / JOG B / JOG C sub-parts | DNK4172 / DNK4173 / DNK4174 | sub-components of the JOGB | the encoder slotted disc + sensor + bearing carrier |
+| **JOGB Assy** (jog wheel) | **DWG1569** | Optical encoder + touch sense + vinyl LED | Same DWG as MK1 — Pioneer kept the jog mechanism. Silkscreen confirmed on jog hub PCB (`DWG1569 JOGB`). |
+| JOG A / JOG B / JOG C sub-parts | DNK4172 / DNK4173 / DNK4174 | sub-components of the JOGB | encoder slotted disc + sensor + bearing carrier |
 | JOG Plate | DAH2052 | aluminium platter on top | mechanical only |
 | JOG Panel | DAH2182 | upper bezel ring | mechanical only |
 | JOG Holder 2 | DNK4175 | mounting bracket | mechanical only |
 | JOG Stay Assy | DXB1780 | jog support frame | mechanical only |
 | FFC Guard | DEC2586 | ribbon cable protector | reuse with new ribbon |
-| **JFLB Assy** (display board) | **DWG1568** | **LED indicators only** — VFD glass stays dark in v0.1 | µPD16306B (IC1201) not driven |
+| **JFLB Assy** (display board) | **DWG1568** | **LED indicators only** — VFD glass stays dark in v0.1 | µPD16306B (IC1201) not driven. Silkscreen `DWG1568 JFLB` confirmed. |
 | SW Ring | DNK4065 | switch contact ring around display | with JFLB |
-| **Top button PCB(s)** | (per RRV2802 schematic — confirm CN numbering) | All search / tempo / mode buttons → rewired to mux A | ~12 buttons typical |
-| **Hot Cue + Loop PCB(s)** | (per RRV2802) | A/B/C + Loop In/Out + Reloop + Hot Loop + Memory + Delete → mux B | ~8 buttons; MK2 added the hot cue cluster |
-| **Pitch fader assembly** | (separate part — 100 mm linear pot) | wiper → S3 ADC | **cut OEM 5 V, re-feed from 3.3 V** |
+| **KSWB Assy** (small key-switch board, 1/2) | **DWS1365** | 2-button cluster, likely loop in/out or similar | silkscreen `DWS1365 KSWB 1/2` confirmed on a green PCB with 2 tact switches + ribbon connector on the right edge |
+| **Top button flex PCB** | **DWX2306** | top button row (search / tempo / mode) → mux A | silkscreen `DWX 2306 KSWB` confirmed on the orange flex board with multiple tact contacts |
+| **Hot Cue + Loop PCB(s)** | (RRV2802 — confirm DWX series) | A/B/C + Loop In/Out + Reloop + Hot Loop + Memory + Delete → mux B | ~8 buttons; MK2 added the hot cue cluster |
+| **Pitch fader assembly** | (slider mounted on a small amber flex PCB; silkscreen `9079` visible on aftermarket replacement units) | wiper → S3 ADC | **cut OEM 5 V, re-feed from 3.3 V**. 100 mm linear pot. |
 | Discrete front switches | individual tact / toggle | PLAY, CUE, VINYL/CDJ, EJECT | direct GPIO, internal pull-ups |
 | OEM 12 V LED rail (CUE/PLAY/LOOP "ring" indicators) | in chassis wiring | low-side switched via IRLZ44N MOSFETs from S3 GPIO | 12 V comes from a small MT3608 boost off USB 5 V |
 
@@ -48,7 +47,10 @@ The service manual parts list confirmed:
 | Board | Drawing # | Why |
 |---|---|---|
 | **DWX2305 MAIN** (mainboard) | DWX2305 | replaced by ESP32-S3 + carrier PCB |
-| CD drive + servo board | (DXM / DKL series) | not playing CDs |
+| **DWX2305-D ABB** (analog/audio daughter board) | DWX2305-D-ABB | silkscreen confirmed on a small green PCB with 8-pin op-amp DIP + electrolytics + `CN1801` ribbon header. Audio path; not needed without CD playback. |
+| **DWX2387 OUT** (rear output / power-input board) | DWX2387 | silkscreen confirmed; carries the rear yellow RCA L/R jacks + Phoenix-style AC-input header + `PHC-101` mains-filter cap area. Removed because v0.1 is USB-bus only and the S3 doesn't emit analog audio. Rear-panel cutouts left empty for a future audio daughterboard. |
+| CD drive + optical pickup assembly | (DXM / pickup unit) | not playing CDs. Pickup lens + sled visible in the teardown photos. |
+| MCB DWX2305 (small switch/connector daughter) | MCB-prefix on DWX2305 family | small daughterboard for one of the front switches; removed with the main board harness |
 | OEM PSU | (DWR series) | v0.1 is USB-bus only; the MT3608 boost handles the 12 V LED rail |
 
 > **Capture-window risk reminder:** before the MAIN board comes out, logic-analyzer-capture the jog-centre position byte off the MAIN ↔ JFLB ribbon (see [`08-display.md`](./08-display.md)). Once the MAIN board is gone, that bus is dead and the v0.2 jog-centre wiring loses its decode source.
@@ -192,23 +194,67 @@ Locks once the MK2 button count is verified at the bench. The 12 / 13 / 18 assig
 
 ## Photo references
 
-The two reference photos in `/Images/` are the working visual baseline for board positions:
+The reference photos in `/Images/` are the working visual baseline for board positions and silkscreen part numbers. Until Garry's own teardown shots are available, they stand in.
 
-- `normal_d4440e-cdj-1000mk2_open.jpg` — unit hinged open. Left half = top plate inverted (you're seeing the underside of the jog hub PCB and the JFLB display board). Right half = chassis bottom with CD drive bay visible.
-- `normal_defc92-cdj-1000mk2_open1.jpg` — chassis bottom only, looking down at the **DWX2305 MAIN** board still in place. The square BGA centre-right is the Pioneer MCU; the Xilinx Spartan FPGA is visible upper-right area; the corner cylinders are the rubber feet.
+### Teardown / open-unit shots (MK2)
 
-Garry's own teardown photos (when he gets the units back from loan) will become the annotated source of truth for connector designators (`CN800`, `CN801`, etc.) — at that point the placeholders in the per-subsystem docs get replaced with concrete CN numbers from the MK2 schematic.
+- `normal_d4440e-cdj-1000mk2_open.jpg` — unit hinged open. Left half = top plate inverted (underside of jog hub PCB and JFLB display board). Right half = chassis bottom with CD drive bay visible.
+- `normal_defc92-cdj-1000mk2_open1.jpg` — chassis bottom only, looking down at the **DWX2305 MAIN** board still in place. Square BGA centre-right is the Pioneer MCU; Xilinx Spartan FPGA visible upper-right; corner cylinders are the rubber feet.
+
+### Top-deck and front-face shots (MK2)
+
+- `Screenshot 2026-06-03 134427.png` / `134546.png` — full top-deck views of an assembled MK2. Confirm the operational button layout: CUE/PLAY large-ring buttons at lower-left, TRACK SEARCH cluster between them and the jog, VFD across the upper half of the chassis, tempo cluster at upper-right, pitch fader on the right edge.
+- `Screenshot 2026-06-03 134626.png` — close-up of the jog-centre showing the "vinyl" indicator with the ring of segments around it. **This is the visual the v0.2 jog-centre reuse work targets.** The blue glow of "vinyl" vs the orange ring is the visual cue that the centre indicator is an LED and the ring is VFD segments.
+- `Screenshot 2026-06-03 134704.png` / `134815.png` — three-quarter views; useful for chassis dimensions.
+- `Screenshot 2026-06-03 135709.png` — front-face close-up with the VFD lit; visual reference for VFD glow colour (orange) and final layout.
+
+### Board-out shots (MK2 — silkscreens legible)
+
+- `Screenshot 2026-06-03 134855.png` — **pitch fader board** (long amber flex PCB with the 100 mm slider; silkscreen `9079`).
+- `Screenshot 2026-06-03 134930.png` — **top button flex PCB** (orange flex; silkscreen `DWX 2306 KSWB`; multiple tact switches in a row).
+- `Screenshot 2026-06-03 135004.png` — **DWX2305-D ABB** small audio daughter board (8-pin op-amp DIP + caps; `CN1801` ribbon). Will be removed.
+- `Screenshot 2026-06-03 135031.png` / `135146.png` — small switch / contact PCBs (likely VINYL/CDJ slide + EJECT/MEMORY cluster).
+- `Screenshot 2026-06-03 135107.png` — slide-switch element with green base PCB (silkscreen `MCB DWX2305`).
+- `Screenshot 2026-06-03 135215.png` / `135240.png` — **DWX2387 OUT** rear output board (RCA L/R yellow jacks + green AC/DC Phoenix input). Will be removed.
+- `Screenshot 2026-06-03 135437.png` — **DWS1365 KSWB 1/2** small 2-switch board (kept).
+- `Screenshot 2026-06-03 135345.png` — additional KSWB button cluster (silkscreen partially visible).
+- `Screenshot 2026-06-03 135523.png` / `135553.png` — CD optical pickup assembly (removed with the drive).
+
+### Mind the contamination
+
+- `Screenshot 2026-06-03 135404.png` is a **CDJ-900** button strip (silkscreen `DWX3548 CDJ-900 KSWB Assy`), **not** the CDJ-1000MK2. Layout is similar — useful as a topology reference for the long top-button strip pattern — but the part number and exact button complement differ from the MK2. Don't read MK2 GPIO assignments off this photo.
+
+### Source caveat
+
+Most of these are eBay / parts-supplier listings (watermarks visible: nbspares, soundservice.gr, djresource.eu). Commodity reference photos — fine for identifying silkscreen part numbers and topology. Garry's own teardown photos (when he gets the units back from loan) will replace them as the annotated source of truth for connector designators (`CN800`, `CN801`, etc.).
 
 ---
+
+## MK2 board catalog (quick lookup)
+
+Use this as a translation table between what's in the photos / silkscreen and what the docs and service manual call it.
+
+| Silkscreen | Drawing # | What it is | v0.1 status |
+|---|---|---|---|
+| `DWG1568 JFLB` | DWG1568 | display board (VFD + plain LEDs + µPD16306B IC1201) | KEEP — LED reuse only |
+| `DWG1569 JOGB` | DWG1569 | jog wheel assembly (encoder + touch + vinyl LED) | KEEP |
+| `DWX 2306 KSWB` | DWX2306 | top button flex PCB (search/tempo/mode cluster) | KEEP — into mux A |
+| `DWS1365 KSWB 1/2` | DWS1365 | small 2-switch key board | KEEP — into mux B |
+| (other KSWB clusters) | DWX-series TBD | hot cue / loop / memory PCBs | KEEP — into mux B |
+| `9079` (on aftermarket replacements) | (Pioneer original part TBD) | pitch fader assembly, 100 mm pot on amber flex | KEEP |
+| `DWX2305 MAIN` | DWX2305 | mainboard (Pioneer MCU + Xilinx Spartan FPGA + DRAM) | REMOVE |
+| `DWX2305-D ABB` | DWX2305-D-ABB | analog/audio daughter board (op-amp + filters; `CN1801`) | REMOVE |
+| `DWX2387 OUT` | DWX2387 | rear output board (RCA L/R + AC input + filter cap PHC-101) | REMOVE |
+| `MCB DWX2305` | MCB-DWX2305 | small switch/connector daughter | REMOVE |
 
 ## What this doc doesn't yet contain
 
 These open items become inputs to the per-subsystem pages as they get written:
 
-- MK2 schematic-sheet connector designations (CN numbers) for each kept board — needs deeper service-manual reading or bench-level continuity checks
+- MK2 schematic-sheet connector designations (`CN800` / `CN801` / `CN1801` series) for each kept board — needs deeper service-manual reading or bench-level continuity checks
 - Confirmed jog encoder PPR for MK2 (the parts list confirms DWG1569 unchanged from MK1, so 135 frames/rev is the working assumption; bench-verify when you have the unit)
 - Jog touch sensor type — cap-sheet vs pressure-sheet
 - Exact JFLB plain-LED identification — which silkscreen labels are LEDs vs VFD segments
-- Final button count including all MK2-specific additions
+- Final button count including all MK2-specific additions (DWX2306 + DWS1365 + the hot-cue cluster, whose DWX number still needs to be read off a photo or the manual)
 
 Each one is tracked in the open-items section of the relevant subsystem page.
