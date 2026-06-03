@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 920" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .oem { fill:#f1f8e9; stroke:#33691e; stroke-width:1.8; }
+    .esp { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2; }
+    .mos { fill:#fce4ec; stroke:#ad1457; stroke-width:1.5; }
+    .pwr { fill:#fff3e0; stroke:#e65100; stroke-width:1.5; }
+    .title{ font-size:18px; font-weight:700; fill:#111; }
+    .h    { font-size:14px; font-weight:700; fill:#111; }
+    .h2   { font-size:12px; font-weight:700; fill:#333; }
+    .note { font-size:11px; fill:#555; }
+    .small{ font-size:10px; fill:#666; }
+    .pin  { font-size:11px; font-weight:600; fill:#0d47a1; }
+    .pinr { font-size:11px; font-weight:600; fill:#c62828; }
+    .pinm { font-size:11px; font-weight:600; fill:#ad1457; }
+    .red  { fill:#c62828; }
+    .w12v { stroke:#fbc02d; stroke-width:3; fill:none; }
+    .w5v  { stroke:#c62828; stroke-width:2; fill:none; }
+    .w3v3 { stroke:#1565c0; stroke-width:2; fill:none; }
+    .wgnd { stroke:#444;    stroke-width:1.5; fill:none; stroke-dasharray:4,3; }
+    .wsig { stroke:#0d47a1; stroke-width:1.5; fill:none; }
+    .wled { stroke:#ad1457; stroke-width:1.8; fill:none; }
+  </style>
+
+  <text x="20" y="28" class="title">06 — LEDs (3 categories: OEM 12 V ring · JFLB plain · jog vinyl)</text>
+  <text x="20" y="46" class="note">Low-side N-MOSFET switching on every LED. Anodes stay on their OEM rails; S3 GPIO toggles cathode-side MOSFETs.</text>
+
+  <!-- ============================================================ -->
+  <!-- BLOCK A: OEM 12V LED rail -->
+  <!-- ============================================================ -->
+  <rect x="20" y="80" width="1260" height="250" rx="10" fill="#fafafa" stroke="#bbb"/>
+  <text x="35" y="104" class="h" fill="#1a237e">A · OEM 12 V LEDs  (CUE / PLAY ring + LOOP indicator)</text>
+
+  <!-- 12V Boost source -->
+  <rect x="40" y="120" width="180" height="80" rx="6" class="pwr"/>
+  <text x="130" y="142" text-anchor="middle" class="h2" fill="#e65100">MT3608 boost</text>
+  <text x="130" y="158" text-anchor="middle" class="note">USB 5 V → 12 V</text>
+  <text x="130" y="174" text-anchor="middle" class="note">~600 mA max</text>
+  <text x="130" y="190" text-anchor="middle" class="note">trim pot to 12.0 V</text>
+
+  <!-- 12V rail -->
+  <line x1="220" y1="148" x2="1240" y2="148" class="w12v"/>
+  <text x="640" y="138" text-anchor="middle" class="small" fill="#f57f17">+12 V rail to all OEM ring LEDs</text>
+
+  <!-- 3 LED stacks -->
+  <g>
+    <!-- CUE -->
+    <rect x="280" y="180" width="120" height="120" rx="6" class="oem"/>
+    <text x="340" y="200" text-anchor="middle" class="h2" fill="#33691e">CUE ring</text>
+    <text x="340" y="216" text-anchor="middle" class="small">yellow LED ring</text>
+    <text x="340" y="232" text-anchor="middle" class="small">around CUE button</text>
+    <circle cx="340" cy="252" r="10" fill="#fff176" stroke="#f57f17" stroke-width="2"/>
+    <line x1="340" y1="148" x2="340" y2="242" class="w12v"/>
+    <line x1="340" y1="262" x2="340" y2="280" class="wled"/>
+
+    <!-- PLAY -->
+    <rect x="450" y="180" width="120" height="120" rx="6" class="oem"/>
+    <text x="510" y="200" text-anchor="middle" class="h2" fill="#33691e">PLAY ring</text>
+    <text x="510" y="216" text-anchor="middle" class="small">blue LED ring</text>
+    <text x="510" y="232" text-anchor="middle" class="small">around PLAY btn</text>
+    <circle cx="510" cy="252" r="10" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+    <line x1="510" y1="148" x2="510" y2="242" class="w12v"/>
+    <line x1="510" y1="262" x2="510" y2="280" class="wled"/>
+
+    <!-- LOOP -->
+    <rect x="620" y="180" width="120" height="120" rx="6" class="oem"/>
+    <text x="680" y="200" text-anchor="middle" class="h2" fill="#33691e">LOOP indicator</text>
+    <text x="680" y="216" text-anchor="middle" class="small">orange LED</text>
+    <text x="680" y="232" text-anchor="middle" class="small">on JFLB area</text>
+    <circle cx="680" cy="252" r="10" fill="#ffb74d" stroke="#e65100" stroke-width="2"/>
+    <line x1="680" y1="148" x2="680" y2="242" class="w12v"/>
+    <line x1="680" y1="262" x2="680" y2="280" class="wled"/>
+  </g>
+
+  <!-- IRLZ44N MOSFETs -->
+  <rect x="280" y="280" width="460" height="40" rx="6" class="mos"/>
+  <text x="510" y="304" text-anchor="middle" class="h2" fill="#ad1457">3 × IRLZ44N TO-220  (low-side, gate from S3 GPIO, 10 kΩ gate pulldown each)</text>
+
+  <!-- Gate signals from S3 -->
+  <line x1="340" y1="320" x2="340" y2="305" stroke="#444" stroke-width="1"/>
+  <line x1="510" y1="320" x2="510" y2="305" stroke="#444" stroke-width="1"/>
+  <line x1="680" y1="320" x2="680" y2="305" stroke="#444" stroke-width="1"/>
+
+  <!-- S3 pin landing for block A -->
+  <rect x="820" y="180" width="440" height="140" rx="8" class="esp"/>
+  <text x="1040" y="204" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 — Block A pins</text>
+  <g font-size="11" font-weight="600">
+    <text x="850" y="230" class="pin">GPIO 14</text>
+    <text x="920" y="230" class="note">→ CUE 12 V MOSFET gate</text>
+    <text x="850" y="248" class="pin">GPIO 19</text>
+    <text x="920" y="248" class="note">→ PLAY 12 V MOSFET gate</text>
+    <text x="850" y="266" class="pin">GPIO 20</text>
+    <text x="920" y="266" class="note">→ LOOP 12 V MOSFET gate</text>
+  </g>
+  <text x="850" y="292" class="small">10 kΩ gate pull-down each (keeps MOSFET off during S3 reset).</text>
+  <text x="850" y="308" class="small">IRLZ44N R<tspan baseline-shift="sub">DS(on)</tspan> ≈ 22 mΩ @ 4.5 V — plenty of headroom for ring-LED currents.</text>
+
+  <!-- Wires gate -->
+  <line x1="850" y1="230" x2="340" y2="320" class="wsig"/>
+  <line x1="850" y1="248" x2="510" y2="320" class="wsig"/>
+  <line x1="850" y1="266" x2="680" y2="320" class="wsig"/>
+
+  <!-- ============================================================ -->
+  <!-- BLOCK B: JFLB plain LEDs -->
+  <!-- ============================================================ -->
+  <rect x="20" y="350" width="1260" height="290" rx="10" fill="#fafafa" stroke="#bbb"/>
+  <text x="35" y="374" class="h" fill="#1a237e">B · JFLB plain-LED reuse  (DWG1568 board, VFD glass dark)</text>
+
+  <text x="35" y="392" class="note">Tap LED cathode pads on JFLB after bench-identifying which indicators are LED vs VFD segment. Drive low-side via SOT-23 N-MOSFETs.</text>
+
+  <!-- JFLB block -->
+  <rect x="40" y="410" width="220" height="200" rx="6" class="oem"/>
+  <text x="150" y="430" text-anchor="middle" class="h2" fill="#33691e">DWG1568 JFLB</text>
+  <text x="150" y="446" text-anchor="middle" class="small">VFD glass = DARK</text>
+  <text x="150" y="462" text-anchor="middle" class="small">µPD16306B (IC1201) = unpowered</text>
+  <g font-size="10">
+    <circle cx="240" cy="488" r="4" fill="#ad1457"/>
+    <text x="232" y="492" text-anchor="end" class="pinm">LED 1 cathode</text>
+    <text x="170" y="504" class="small">  (vinyl status, or first plain LED found)</text>
+    <circle cx="240" cy="520" r="4" fill="#ad1457"/>
+    <text x="232" y="524" text-anchor="end" class="pinm">LED 2 cathode</text>
+    <text x="170" y="536" class="small">  (TIME / REMAIN mode)</text>
+    <circle cx="240" cy="552" r="4" fill="#ad1457"/>
+    <text x="232" y="556" text-anchor="end" class="pinm">LED 3 cathode</text>
+    <text x="170" y="568" class="small">  (AUTO CUE)</text>
+    <circle cx="240" cy="584" r="4" fill="#ad1457"/>
+    <text x="232" y="588" text-anchor="end" class="pinm">LED 4 cathode</text>
+    <text x="170" y="600" class="small">  (MEMORY indicator)</text>
+  </g>
+
+  <!-- MOSFET array -->
+  <rect x="320" y="410" width="180" height="200" rx="6" class="mos"/>
+  <text x="410" y="434" text-anchor="middle" class="h2" fill="#ad1457">AO3400 array × 4</text>
+  <text x="410" y="452" text-anchor="middle" class="small">SOT-23 N-MOSFETs</text>
+  <text x="410" y="468" text-anchor="middle" class="small">V<tspan baseline-shift="sub">GS(th)</tspan> = 1.4 V</text>
+  <text x="410" y="484" text-anchor="middle" class="small">R<tspan baseline-shift="sub">DS(on)</tspan> ≈ 50 mΩ</text>
+  <text x="410" y="502" text-anchor="middle" class="small">handles 5 A drain</text>
+  <text x="410" y="520" text-anchor="middle" class="small">(massively over-spec'd</text>
+  <text x="410" y="536" text-anchor="middle" class="small">for a single LED but</text>
+  <text x="410" y="552" text-anchor="middle" class="small">cheap and small)</text>
+  <text x="410" y="574" text-anchor="middle" class="small">10 kΩ gate pull-down</text>
+  <text x="410" y="590" text-anchor="middle" class="small">each FET</text>
+
+  <!-- S3 pin landing for block B -->
+  <rect x="820" y="410" width="440" height="200" rx="8" class="esp"/>
+  <text x="1040" y="434" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 — Block B pins</text>
+  <g font-size="11" font-weight="600">
+    <text x="850" y="462" class="pin">GPIO 35</text>
+    <text x="920" y="462" class="note">→ JFLB LED 1 gate</text>
+    <text x="850" y="480" class="pin">GPIO 36</text>
+    <text x="920" y="480" class="note">→ JFLB LED 2 gate</text>
+    <text x="850" y="498" class="pin">GPIO 37</text>
+    <text x="920" y="498" class="note">→ JFLB LED 3 gate</text>
+    <text x="850" y="516" class="pin">GPIO 38</text>
+    <text x="920" y="516" class="note">→ JFLB LED 4 gate</text>
+  </g>
+  <text x="850" y="544" class="small">Anodes stay on the OEM low-voltage rail (3.3 V or 5 V — verify per LED).</text>
+  <text x="850" y="560" class="small">No HV needed because the VFD glass itself stays dark — we only drive plain LEDs.</text>
+  <text x="850" y="582" class="small">Add a 220 Ω inline if the OEM rail is 5 V and the LED has no series R already.</text>
+
+  <!-- Wires for block B -->
+  <line x1="260" y1="488" x2="320" y2="440" class="wled"/>
+  <line x1="260" y1="520" x2="320" y2="470" class="wled"/>
+  <line x1="260" y1="552" x2="320" y2="500" class="wled"/>
+  <line x1="260" y1="584" x2="320" y2="530" class="wled"/>
+
+  <line x1="500" y1="440" x2="850" y2="462" class="wsig"/>
+  <line x1="500" y1="470" x2="850" y2="480" class="wsig"/>
+  <line x1="500" y1="500" x2="850" y2="498" class="wsig"/>
+  <line x1="500" y1="530" x2="850" y2="516" class="wsig"/>
+
+  <!-- ============================================================ -->
+  <!-- BLOCK C: Jog vinyl LED -->
+  <!-- ============================================================ -->
+  <rect x="20" y="660" width="1260" height="180" rx="10" fill="#fafafa" stroke="#bbb"/>
+  <text x="35" y="684" class="h" fill="#1a237e">C · Jog vinyl indicator  (centre of jog wheel)</text>
+
+  <text x="35" y="702" class="note">The blue glow at the centre of the jog wheel is a single plain LED on the jog hub PCB. Same drive technique as Block B, separate from JFLB.</text>
+
+  <!-- Jog hub LED -->
+  <rect x="40" y="720" width="220" height="100" rx="6" class="oem"/>
+  <text x="150" y="744" text-anchor="middle" class="h2" fill="#33691e">Jog hub PCB</text>
+  <text x="150" y="760" text-anchor="middle" class="small">vinyl LED (blue, low V)</text>
+  <circle cx="150" cy="785" r="10" fill="#42a5f5" stroke="#01579b" stroke-width="2"/>
+  <text x="150" y="810" text-anchor="middle" class="small">cathode wire out → MOSFET</text>
+
+  <!-- Single MOSFET -->
+  <rect x="320" y="720" width="180" height="100" rx="6" class="mos"/>
+  <text x="410" y="744" text-anchor="middle" class="h2" fill="#ad1457">AO3400 × 1</text>
+  <text x="410" y="762" text-anchor="middle" class="small">SOT-23 low-side</text>
+  <text x="410" y="780" text-anchor="middle" class="small">10 kΩ gate pull-down</text>
+  <text x="410" y="800" text-anchor="middle" class="small">anode on jog hub's</text>
+  <text x="410" y="816" text-anchor="middle" class="small">existing 5 V or 3.3 V rail</text>
+
+  <!-- S3 pin landing for block C -->
+  <rect x="820" y="720" width="440" height="100" rx="8" class="esp"/>
+  <text x="1040" y="744" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 — Block C pin</text>
+  <g font-size="11" font-weight="600">
+    <text x="850" y="772" class="pin">GPIO 21</text>
+    <text x="920" y="772" class="note">→ jog vinyl LED MOSFET gate</text>
+  </g>
+  <text x="850" y="800" class="small">Toggle the LED based on VINYL/CDJ switch state (Lane 6 / GPIO 16 input).</text>
+
+  <!-- Wires for block C -->
+  <line x1="260" y1="785" x2="320" y2="770" class="wled"/>
+  <line x1="500" y1="770" x2="850" y2="772" class="wsig"/>
+
+  <!-- ============================================================ -->
+  <!-- Critical rules panel -->
+  <!-- ============================================================ -->
+  <rect x="20" y="860" width="1260" height="50" rx="6" fill="#fff" stroke="#b71c1c" stroke-width="1.5"/>
+  <text x="40" y="884" class="h" fill="#b71c1c">⚠ Always low-side</text>
+  <text x="180" y="884" class="note">— LED anode on OEM rail (12 V / 5 V / 3.3 V); cathode through N-MOSFET to GND. Never source from S3 GPIO directly.</text>
+  <text x="40" y="901" class="small">Gate pull-down (10 kΩ to GND) on every MOSFET keeps it off during S3 reset / programming. Without it the LEDs flash on every boot.</text>
+</svg>
