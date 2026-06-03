@@ -1,0 +1,36 @@
+# ESP32 / PlatformIO / ESP-IDF
+.pio/
+.pioenvs/
+.piolibdeps/
+build/
+sdkconfig.old
+managed_components/
+dependencies.lock
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Claude / engram
+.claude/
+.engram/
+
+# Reference repos (cloned locally for research, not redistributed)
+references/
+
+# Source PDFs / manuals (kept local; not redistributed due to copyright)
+docs/source/
+
+# Working files
+*.tmp
+*_preview.html
