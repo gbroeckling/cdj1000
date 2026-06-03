@@ -4,7 +4,7 @@
 
 Resurrect a Pioneer CDJ-1000MK2 (2003, no native USB/MIDI) as a class-compliant USB-MIDI / HID controller for Traktor Pro 4. The OEM mainboard and CD drive are removed; the chassis, jog wheel assembly, pitch fader, button PCBs (including the MK2-added Hot Cue A/B/C and Hot Loop buttons), pots, and encoders are kept and re-wired to an **ESP32-S3 DevKitC-1 (N16R8)** that speaks USB-MIDI natively via TinyUSB.
 
-> **Status:** architecture v0.2 — target unit confirmed as CDJ-1000**MK2** (service manual doc RRV2802). Wiring topology unchanged from v0.1; button count and display driver IC pending MK2 verification.
+> **Status:** architecture v0.3 — target unit confirmed as CDJ-1000**MK2** (service manual doc RRV2802). MK2 JFLB display board (DWG1568) uses the **same µPD16306B VFD driver as MK1** (IC1201). **Display path: Path D** — port [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) from MK3 to MK2. See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
 
 ---
 
@@ -60,13 +60,14 @@ Full GPIO table and wiring SVGs: [`docs/wiring/README.md`](docs/wiring/README.md
 
 | Project | Why it matters |
 |---|---|
-| [spectran/CDJ-100S-MIDI-Adapter](https://github.com/spectran/CDJ-100S-MIDI-Adapter) | Closest prior art. STM32F103 replacing the mainboard on a CDJ-100S; full schematic + `Connection_scheme.pdf` + VirtualDJ XML. Source of the 3.3 V pitch-fader fix. |
-| [pestrela/dj_maps](https://github.com/pestrela/dj_maps) | Richest Traktor Pro mappings — including DDJ-1000 with BOME jog-screen feedback. Pattern source for our `.tsi` map. |
+| [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) | **Display path D source.** STM32F746G-DISCO + custom firmware simulating the CDJ-2000nxs UI, SD-card audio, slip mode, RGB waveform. MK3-only upstream; we're porting to MK2. Repo ships the MK3 panel↔main serial protocol decode (`Reverse Engineering Pioneer CDJ-1000 serial protocol.pdf`, by Anatsko Andrei). |
+| [spectran/CDJ-100S-MIDI-Adapter](https://github.com/spectran/CDJ-100S-MIDI-Adapter) | Closest prior art at the signal-tap level. STM32F103 replacing the mainboard on a CDJ-100S; full schematic + `Connection_scheme.pdf` + VirtualDJ XML. Source of the 3.3 V pitch-fader fix. (No LICENSE — reference only.) |
+| [pestrela/dj_maps](https://github.com/pestrela/dj_maps) | Richest Traktor Pro mappings — including DDJ-1000 with BOME jog-screen feedback. Pattern source for our `.tsi` map. (MIT.) |
 | Lee Smith / DJLegionUK — CDJ-1000 Teensy builds | Original MK1 article [djtechtools.com 2017](https://djtechtools.com/2017/06/28/hacking-cdj-1000mk1-work-midi-controller-traktor-scratch/) + later drop-in PCBs covering MK1/**MK2**/MK3. |
 | MK3 conversion reference | [Converting A Dead CDJ-1000MK3 To A MIDI Controller — DJ TechTools](https://djtechtools.com/2017/07/28/converting-dead-cdj-1000mk3-midi-controller/) |
-| Pioneer service manual (MK2) | Doc **RRV2802** — available via [ManualsLib](https://www.manualslib.com/manual/1059617/Pioneer-Cdj-1000mk2.html), elektrotanya. |
+| Pioneer service manual (MK2) | Doc **RRV2802** — available via [ManualsLib](https://www.manualslib.com/manual/1059617/Pioneer-Cdj-1000mk2.html), elektrotanya. Local copy in `docs/source/` (gitignored). |
 
-Local clones of the first two repos live under `references/` (gitignored).
+Local clones of the three GitHub repos live under `references/` (gitignored).
 
 ---
 
@@ -76,9 +77,10 @@ Local clones of the first two repos live under `references/` (gitignored).
 2. Jog-touch sensor type on MK2 — capacitive vs pressure sheet (determines S3 native touch vs comparator front-end)
 3. Trace MK2 button PCB connector (CN) pinout → 4067 channel map. Include Hot Cue A/B/C + Hot Loop in the count.
 4. Lock final GPIO map after button count — MK2 may need a 3rd 4067 mux
-5. Identify the MK2 VFD driver IC (MK1 used NEC µPD16306B; MK2 service manual lists buffer/inverter chips around it but the actual driver part needs verification)
-6. Display decision — Path A (reuse OEM VFD via protocol replay) **before** mainboard removal, or Path C (replace with modern OLED/IPS). See [`docs/wiring/07-display-research.md`](docs/wiring/07-display-research.md).
-7. Firmware path — ESP-IDF + TinyUSB MIDI **vs** Arduino-ESP32 + Adafruit TinyUSB
+5. ~~Identify the MK2 VFD driver IC~~ — **CLOSED**: NEC µPD16306B at IC1201 on JFLB DWG1568 (same driver as MK1).
+6. ~~Display decision~~ — **CLOSED**: Path D (port djgreeb MK3 → MK2). See [`docs/wiring/08-display.md`](docs/wiring/08-display.md).
+7. Decode the MK2 panel↔main serial protocol (the MK3 byte-level decode in djgreeb's repo is the starting point; expect "MK3 minus some bytes" per the CDJ-800 MK2 analogue).
+8. Firmware path — ESP-IDF + TinyUSB MIDI **vs** Arduino-ESP32 + Adafruit TinyUSB. (Display logic stays on the STM32 Disco; the S3 handles MIDI/HID + jog/buttons/fader.)
 
 ---
 

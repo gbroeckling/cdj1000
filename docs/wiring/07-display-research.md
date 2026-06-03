@@ -66,9 +66,21 @@ This is what every successful build has done.
 
 ---
 
-## Recommendation
+## Decision (2026-06-03): **Path D**
 
-**Path C unless you commit to Path A *before* removing the mainboard.**
+**Path D = port [djgreeb/CDJ-1000mk3_new_life_project](https://github.com/djgreeb/CDJ-1000mk3_new_life_project) from MK3 to MK2.** djgreeb's project replaces the OEM VFD with an STM32F746G-DISCO board running custom firmware that simulates the CDJ-2000nxs UI (waveforms, BPM, slip mode, RGB) and plays from SD. We reuse their entire display+UI+audio stack and only re-target the input side (button/serial-protocol decode) to MK2.
+
+Path D was selected over Path C because the published firmware closes most of the work and the included protocol decode PDF gives us 80%+ of the MK3 panel↔main byte format for free.
+
+Implementation plan: [`08-display.md`](./08-display.md).
+
+(Old recommendation kept below for historical context.)
+
+---
+
+## ~~Old recommendation~~ (superseded by Path D)
+
+~~**Path C unless you commit to Path A *before* removing the mainboard.**~~
 
 The aesthetic loss vs an OEM-looking VFD is real but small — a well-styled OLED in the same window with a retro orange palette captures ~90% of the feel. The engineering delta — HV inverter plus logic-analyzer protocol capture (A) or full driver reverse-engineering (B) — is several weekends of risky work, and the end result is still constrained to Pioneer's segment vocabulary.
 
