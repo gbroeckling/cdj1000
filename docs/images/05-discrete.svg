@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk  { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .oem  { fill:#f1f8e9; stroke:#33691e; stroke-width:1.8; }
+    .esp  { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2; }
+    .title{ font-size:18px; font-weight:700; fill:#111; }
+    .h    { font-size:14px; font-weight:700; fill:#111; }
+    .h2   { font-size:12px; font-weight:700; fill:#333; }
+    .note { font-size:11px; fill:#555; }
+    .small{ font-size:10px; fill:#666; }
+    .pin  { font-size:11px; font-weight:600; fill:#0d47a1; }
+    .pur  { fill:#6a1b9a; font-weight:700; font-size:11px; }
+    .wsig { stroke:#0d47a1; stroke-width:1.5; fill:none; }
+    .w3v3 { stroke:#1565c0; stroke-width:1.5; fill:none; }
+    .wgnd { stroke:#444;    stroke-width:1.5; stroke-dasharray:4,3; fill:none; }
+  </style>
+
+  <text x="20" y="28" class="title">05 — Discrete Front Switches (direct GPIO)</text>
+  <text x="20" y="46" class="note">No mux, no level shifter. Each switch → S3 GPIO with internal pull-up. PLAY/CUE/EJECT are momentary; VINYL/CDJ is a maintained toggle.</text>
+
+  <!-- ============================================================ -->
+  <!-- Switch panel -->
+  <!-- ============================================================ -->
+  <rect x="40" y="90" width="500" height="420" rx="10" class="oem"/>
+  <text x="290" y="116" text-anchor="middle" class="h" fill="#33691e">OEM front-panel switches (KEEP)</text>
+
+  <!-- PLAY -->
+  <g>
+    <rect x="80" y="140" width="60" height="60" rx="30" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+    <text x="110" y="178" text-anchor="middle" class="h2">PLAY</text>
+    <text x="160" y="150" class="note">large illuminated button (front-left)</text>
+    <text x="160" y="166" class="small">momentary tact under the cap</text>
+    <text x="160" y="182" class="pur">→ direct: GPIO 7, active LOW</text>
+    <text x="160" y="198" class="small">internal pull-up enabled</text>
+    <circle cx="500" cy="170" r="4" fill="#0d47a1"/>
+  </g>
+
+  <!-- CUE -->
+  <g>
+    <rect x="80" y="220" width="60" height="60" rx="30" fill="#fff176" stroke="#f57f17" stroke-width="2"/>
+    <text x="110" y="258" text-anchor="middle" class="h2">CUE</text>
+    <text x="160" y="230" class="note">large illuminated button (front-left)</text>
+    <text x="160" y="246" class="small">momentary tact under the cap</text>
+    <text x="160" y="262" class="pur">→ direct: GPIO 15, active LOW</text>
+    <text x="160" y="278" class="small">internal pull-up enabled</text>
+    <circle cx="500" cy="250" r="4" fill="#0d47a1"/>
+  </g>
+
+  <!-- VINYL / CDJ -->
+  <g>
+    <rect x="80" y="300" width="60" height="60" rx="6" fill="#e1bee7" stroke="#6a1b9a" stroke-width="2"/>
+    <text x="110" y="328" text-anchor="middle" class="h2" font-size="10">VINYL</text>
+    <text x="110" y="342" text-anchor="middle" class="h2" font-size="10">/ CDJ</text>
+    <text x="160" y="312" class="note">slide / toggle on top deck</text>
+    <text x="160" y="328" class="small">maintained state — not a press</text>
+    <text x="160" y="344" class="pur">→ direct: GPIO 16, read level</text>
+    <text x="160" y="360" class="small">pull-up enabled; mode = LOW ⇒ VINYL</text>
+    <circle cx="500" cy="330" r="4" fill="#0d47a1"/>
+  </g>
+
+  <!-- EJECT -->
+  <g>
+    <rect x="80" y="380" width="60" height="60" rx="6" fill="#ffccbc" stroke="#bf360c" stroke-width="2"/>
+    <text x="110" y="418" text-anchor="middle" class="h2">EJECT</text>
+    <text x="160" y="392" class="note">small momentary near CD slot</text>
+    <text x="160" y="408" class="small">tact contact</text>
+    <text x="160" y="424" class="pur">→ direct: GPIO 17, active LOW</text>
+    <text x="160" y="440" class="small">or move to mux if pin pressure</text>
+    <circle cx="500" cy="410" r="4" fill="#0d47a1"/>
+  </g>
+
+  <text x="290" y="476" text-anchor="middle" class="note">other terminal of every switch → GND (chassis star tie)</text>
+
+  <!-- ============================================================ -->
+  <!-- ESP32-S3 -->
+  <!-- ============================================================ -->
+  <rect x="640" y="90" width="520" height="280" rx="10" class="esp"/>
+  <text x="900" y="116" text-anchor="middle" class="h" fill="#0d47a1">ESP32-S3 — Block 05 pins</text>
+  <text x="900" y="134" text-anchor="middle" class="note">all 4 GPIOs configured INPUT + internal pull-up</text>
+
+  <g font-size="12" font-weight="600">
+    <text x="660" y="170" class="pin">GPIO 7</text>
+    <text x="730" y="170" class="note">PLAY/PAUSE input (momentary, active LOW, on_press / on_release)</text>
+    <circle cx="640" cy="170" r="4" fill="#0d47a1"/>
+
+    <text x="660" y="210" class="pin">GPIO 15</text>
+    <text x="730" y="210" class="note">CUE input (momentary, active LOW)</text>
+    <circle cx="640" cy="210" r="4" fill="#0d47a1"/>
+
+    <text x="660" y="250" class="pin">GPIO 16</text>
+    <text x="730" y="250" class="note">VINYL/CDJ toggle (maintained, on_state)</text>
+    <circle cx="640" cy="250" r="4" fill="#0d47a1"/>
+
+    <text x="660" y="290" class="pin">GPIO 17</text>
+    <text x="730" y="290" class="note">EJECT input (momentary, active LOW)</text>
+    <circle cx="640" cy="290" r="4" fill="#0d47a1"/>
+  </g>
+
+  <!-- Pin-mode notes -->
+  <rect x="660" y="310" width="480" height="50" rx="6" fill="#fff" stroke="#1565c0"/>
+  <text x="900" y="328" text-anchor="middle" class="note">ESPHome: <tspan font-family="ui-monospace">binary_sensor.gpio</tspan> with <tspan font-family="ui-monospace">pin: { mode: { input: true, pullup: true }, inverted: true }</tspan></text>
+  <text x="900" y="346" text-anchor="middle" class="small">VINYL/CDJ skips the <tspan font-family="ui-monospace">inverted: true</tspan> so the platform reports actual switch state (LOW = vinyl mode).</text>
+
+  <!-- Wires -->
+  <line x1="500" y1="170" x2="640" y2="170" class="wsig"/>
+  <line x1="500" y1="250" x2="640" y2="210" class="wsig"/>
+  <line x1="500" y1="330" x2="640" y2="250" class="wsig"/>
+  <line x1="500" y1="410" x2="640" y2="290" class="wsig"/>
+
+  <!-- Rules panel -->
+  <rect x="40" y="535" width="1120" height="50" rx="6" fill="#fff" stroke="#b71c1c" stroke-width="1.5"/>
+  <text x="60" y="557" class="h" fill="#b71c1c">⚠ One terminal of every switch → its GPIO. The other terminal → GND. Never wire across rails.</text>
+  <text x="60" y="574" class="small">Run twisted pair (signal + GND return) if a switch sits more than ~10 cm from the S3 module. 100 nF cap GPIO→GND optional for noise immunity in EMI-heavy chassis bays.</text>
+</svg>

@@ -14,7 +14,7 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (T
 | 02 | [Jog touch sheet (3 sensor paths)](./02-jog-touch.md) | ✅ v0.1 |
 | 03 | [Pitch fader (3.3 V re-feed + ADC)](./03-pitch-fader.md) | ✅ v0.1 |
 | 04 | [Button matrix (2× 74HC4067 + escape hatch for MUX C)](./04-buttons-mux.md) | ✅ v0.1 |
-| 05 | Discrete buttons (PLAY / CUE / VINYL) | 🚧 TBD |
+| 05 | [Discrete front switches (PLAY / CUE / VINYL / EJECT)](./05-discrete.md) | ✅ v0.1 |
 | 06 | [LEDs (12 V ring + JFLB plain + jog vinyl)](./06-leds.md) | ✅ v0.1 |
 | 07 | [OEM VFD reuse research](./07-display-research.md) — historical path comparison | ✅ v0.1 |
 | 08 | [**Display — v0.1 JFLB LEDs only, Path D deferred to v0.2+**](./08-display.md) | ✅ v0.1 locked |
