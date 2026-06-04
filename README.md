@@ -104,7 +104,7 @@ Local clones of the three GitHub repos live under `references/` (gitignored).
 3. Trace MK2 button PCB connector (CN) pinout → 4067 channel map. Include Hot Cue A/B/C + Hot Loop in the count.
 4. Lock final GPIO map after button count — MK2 may need a 3rd 4067 mux
 5. **JFLB LED audit** — when the unit is open, trace the JFLB board to identify which indicators are plain LEDs (not VFD segments). The "vinyl" indicator (blue glow) is almost certainly an LED; expect 1–3 more (mode indicators). LEDs get wired to S3 GPIO via small MOSFETs.
-6. **Jog-centre protocol-byte capture** — *before* disassembly. Logic-analyzer the MK2 panel↔main ribbon at known jog positions; locate the 1-byte position cursor (1..135 + animation codes per djgreeb's MK3 doc). Document for v0.2. **The capture window closes the moment the OEM mainboard comes out.**
+6. ~~Jog-centre protocol-byte capture~~ — **dropped** after re-evaluation: the OEM VFD rotating cursor needs HV rails + OEM PSU retention regardless of where the position value comes from. If the rotating-cursor look becomes a goal later, a WS2812 LED ring driven by the S3 RMT peripheral from the jog PCNT count gives the same visual with no HV / no protocol replay / no OEM PSU.
 7. ~~Firmware path~~ — **CLOSED**: ESPHome on esp-idf framework + custom `usb_midi` and `jog_quadrature` external components. Resilient WiFi/API config so the deck never reboots when away from home. See [`firmware/README.md`](firmware/README.md).
 
 ### Closed for v0.1

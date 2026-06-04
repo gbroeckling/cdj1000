@@ -8,7 +8,7 @@
 
 ## Block A — OEM 12 V ring LEDs (CUE / PLAY / LOOP)
 
-The OEM unit drives these from a +12 V rail through transistors on the mainboard. With the mainboard gone, we provide our own 12 V from a small **MT3608** boost off USB-VBUS (see [`09-power.md`](./09-power.md) — coming) and switch each ring with an **IRLZ44N**.
+The OEM unit drives these from a +12 V rail through transistors on the mainboard. With the mainboard gone, we provide our own 12 V from a small **MT3608** boost off USB-VBUS (see [`09-power.md`](./09-power.md)) and switch each ring with an **IRLZ44N**.
 
 | LED string | Anode | Cathode (low-side switch) | S3 GPIO |
 |---|---|---|---|

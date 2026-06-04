@@ -95,9 +95,7 @@ If you genuinely want Path A:
 
 ## Open follow-ups
 
-- [ ] Decision: A vs C (default C).
-- [ ] If C: SSD1306 vs ST7789 vs GC9A01 (round) — see [`08-display-modern.md`](./08-display-modern.md) (to be written when the decision is made).
-- [ ] If A: order a logic analyzer; identify the display ribbon connector on the service-manual schematic; budget ~3 weekends for capture + decode.
+(All resolved — see [`08-display.md`](./08-display.md) for the locked v0.1 plan.)
 
 ---
 

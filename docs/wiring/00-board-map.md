@@ -72,7 +72,7 @@ The small round PCB at the centre of the jog wheel, accessed by lifting the plat
 | TOUCH | sensor →  S3 | **GPIO 6** (cap-touch input or via comparator) | (optional comp) | sensor type to verify on the MK2 — cap-sheet uses S3 native touch peripheral, pressure-sheet needs a small comparator front-end |
 | VINYL LED cathode | S3 →  LED | AO3400 SOT-23 drain | small MOSFET | low-side switched from **GPIO 21**; anode tied to 3.3 V or 5 V on the OEM rail (the blue glow indicates an LED, not a VFD segment) |
 
-Full subsystem detail: [`01-jog-encoder.md`](./01-jog-encoder.md) (jog encoder), `02-jog-touch.md` (to come), `06-leds.md` (to come, vinyl LED).
+Full subsystem detail: [`01-jog-encoder.md`](./01-jog-encoder.md), [`02-jog-touch.md`](./02-jog-touch.md), [`06-leds.md`](./06-leds.md).
 
 ### Top button PCB
 
