@@ -18,7 +18,7 @@ Per-subsystem wiring docs for the **Pioneer CDJ-1000MK2 → ESP32-S3** build. (T
 | 06 | [LEDs (12 V ring + JFLB plain + jog vinyl)](./06-leds.md) | ✅ v0.1 |
 | 07 | [OEM VFD reuse research](./07-display-research.md) — historical path comparison | ✅ v0.1 |
 | 08 | [**Display — v0.1 JFLB LEDs only, Path D deferred to v0.2+**](./08-display.md) | ✅ v0.1 locked |
-| 09 | Power (USB 5 V, 3.3 V LDO, MT3608 boost) | 🚧 TBD |
+| 09 | [Power tree (USB 5 V + DevKit 3.3 V LDO + MT3608 12 V boost)](./09-power.md) | ✅ v0.1 |
 
 ## GPIO summary (v0.1, tentative)
 

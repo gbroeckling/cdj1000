@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 880" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <style>
+    .blk  { fill:#fff; stroke:#222; stroke-width:1.5; }
+    .pwr  { fill:#fff3e0; stroke:#e65100; stroke-width:2; }
+    .esp  { fill:#e8f5ff; stroke:#0d47a1; stroke-width:2; }
+    .gnd  { fill:#eceff1; stroke:#37474f; stroke-width:1.8; }
+    .danger{ fill:#ffebee; stroke:#b71c1c; stroke-width:1.5; }
+    .title{ font-size:18px; font-weight:700; fill:#111; }
+    .h    { font-size:14px; font-weight:700; fill:#111; }
+    .h2   { font-size:12px; font-weight:700; fill:#333; }
+    .note { font-size:11px; fill:#444; }
+    .small{ font-size:10px; fill:#666; }
+    .pin  { font-size:11px; font-weight:600; fill:#0d47a1; }
+
+    .w5v  { stroke:#c62828; stroke-width:3; fill:none; }
+    .w3v3 { stroke:#1565c0; stroke-width:3; fill:none; }
+    .w12v { stroke:#fbc02d; stroke-width:4; fill:none; }
+    .wgnd { stroke:#444;    stroke-width:2; fill:none; stroke-dasharray:6,3; }
+  </style>
+
+  <text x="20" y="28" class="title">09 — Power Tree (v0.1: USB-bus only)</text>
+  <text x="20" y="46" class="note">USB-C VBUS → on-DevKit 3.3 V LDO + MT3608 12 V boost + 5 V passthrough. Star ground at the USB-C return.</text>
+
+  <!-- ============================================================ -->
+  <!-- USB-C source -->
+  <!-- ============================================================ -->
+  <rect x="40" y="100" width="220" height="100" rx="10" class="pwr"/>
+  <text x="150" y="124" text-anchor="middle" class="h" fill="#e65100">USB-C jack (S3 DevKit)</text>
+  <text x="150" y="146" text-anchor="middle" class="note">VBUS: 5 V nominal</text>
+  <text x="150" y="162" text-anchor="middle" class="note">spec: 500 mA (USB 2.0)</text>
+  <text x="150" y="178" text-anchor="middle" class="note">most hosts negotiate 900 mA+</text>
+  <text x="150" y="194" text-anchor="middle" class="note">data: D+/D− → S3 USB phy</text>
+
+  <!-- Splitter -->
+  <line x1="260" y1="150" x2="320" y2="150" class="w5v"/>
+  <circle cx="320" cy="150" r="6" fill="#c62828"/>
+  <text x="330" y="142" class="small">5 V node</text>
+
+  <!-- Splits into 3 branches -->
+  <line x1="320" y1="150" x2="320" y2="280" class="w5v"/>
+  <line x1="320" y1="150" x2="320" y2="450" class="w5v"/>
+  <line x1="320" y1="150" x2="320" y2="630" class="w5v"/>
+
+  <!-- ============================================================ -->
+  <!-- Branch 1: on-DevKit 3.3 V LDO -->
+  <!-- ============================================================ -->
+  <rect x="380" y="250" width="240" height="90" rx="8" class="pwr"/>
+  <text x="500" y="274" text-anchor="middle" class="h2" fill="#e65100">DevKit 3.3 V LDO</text>
+  <text x="500" y="292" text-anchor="middle" class="note">ME6211 / SGM2202 family</text>
+  <text x="500" y="308" text-anchor="middle" class="note">≥ 500 mA continuous</text>
+  <text x="500" y="324" text-anchor="middle" class="note">~100 mA max draw from 3.3 V budget</text>
+  <line x1="320" y1="295" x2="380" y2="295" class="w5v"/>
+
+  <!-- Branch 1 consumers -->
+  <line x1="620" y1="295" x2="900" y2="295" class="w3v3"/>
+  <rect x="900" y="250" width="350" height="90" rx="8" class="blk"/>
+  <text x="1075" y="272" text-anchor="middle" class="h2" fill="#0d47a1">3.3 V consumers</text>
+  <text x="915" y="290" class="small">• ESP32-S3 logic + USB phy ............. ~80 mA peak (~40 mA avg)</text>
+  <text x="915" y="306" class="small">• 2 × 74HC4067 mux (incl. spare 3rd) ... ~3 mA total</text>
+  <text x="915" y="322" class="small">• TXS0108E VCCB + jog touch front-end .. ~2 mA</text>
+  <text x="915" y="338" class="small">• Pitch fader top + JFLB plain LEDs ..... ~30 mA peak</text>
+
+  <!-- ============================================================ -->
+  <!-- Branch 2: MT3608 12 V boost -->
+  <!-- ============================================================ -->
+  <rect x="380" y="420" width="240" height="90" rx="8" class="pwr"/>
+  <text x="500" y="444" text-anchor="middle" class="h2" fill="#e65100">MT3608 5 V → 12 V boost</text>
+  <text x="500" y="462" text-anchor="middle" class="note">trim pot to set 12.0 V output</text>
+  <text x="500" y="478" text-anchor="middle" class="note">~92 % efficiency @ 200 mA out</text>
+  <text x="500" y="494" text-anchor="middle" class="note">→ ~480 mA pulled from USB 5 V</text>
+  <line x1="320" y1="465" x2="380" y2="465" class="w5v"/>
+
+  <!-- Branch 2 consumers -->
+  <line x1="620" y1="465" x2="900" y2="465" class="w12v"/>
+  <rect x="900" y="420" width="350" height="90" rx="8" class="blk"/>
+  <text x="1075" y="442" text-anchor="middle" class="h2" fill="#f57f17">12 V consumers</text>
+  <text x="915" y="460" class="small">• CUE ring LED rail .................... ~60 mA when lit</text>
+  <text x="915" y="476" class="small">• PLAY ring LED rail ................... ~80 mA when lit</text>
+  <text x="915" y="492" class="small">• LOOP indicator rail .................. ~20 mA</text>
+  <text x="915" y="506" class="small">  switched low-side by 3 × IRLZ44N (see 06-leds.md)</text>
+
+  <!-- ============================================================ -->
+  <!-- Branch 3: 5 V passthrough -->
+  <!-- ============================================================ -->
+  <rect x="380" y="600" width="240" height="90" rx="8" class="pwr"/>
+  <text x="500" y="624" text-anchor="middle" class="h2" fill="#e65100">5 V passthrough</text>
+  <text x="500" y="642" text-anchor="middle" class="note">direct from USB VBUS</text>
+  <text x="500" y="658" text-anchor="middle" class="note">no regulator — USB tolerance is OK</text>
+  <text x="500" y="674" text-anchor="middle" class="note">for the 5 V loads</text>
+  <line x1="320" y1="645" x2="380" y2="645" class="w5v"/>
+
+  <!-- Branch 3 consumers -->
+  <line x1="620" y1="645" x2="900" y2="645" class="w5v"/>
+  <rect x="900" y="600" width="350" height="90" rx="8" class="blk"/>
+  <text x="1075" y="622" text-anchor="middle" class="h2" fill="#c62828">5 V consumers</text>
+  <text x="915" y="640" class="small">• OEM jog encoder VCC .................. ~15 mA</text>
+  <text x="915" y="656" class="small">• TXS0108E VCCA (5 V side) ............. negligible</text>
+  <text x="915" y="672" class="small">• OEM jog vinyl LED anode (if 5 V rail) ~10 mA</text>
+
+  <!-- ============================================================ -->
+  <!-- Star ground bar -->
+  <!-- ============================================================ -->
+  <rect x="40" y="730" width="1210" height="100" rx="10" class="gnd"/>
+  <text x="60" y="754" class="h" fill="#37474f">⚡ Star ground @ USB-C return</text>
+  <text x="60" y="774" class="small">• Single common tie point on the carrier PCB at the USB-C jack's GND pin.</text>
+  <text x="60" y="790" class="small">• Power GND (12 V boost return + 5 V branches) and signal GND (mux / level shifter / S3 logic) share the tie but route as separate copper pours before meeting.</text>
+  <text x="60" y="806" class="small">• Analog GND for the pitch-fader ADC: pull from the same star but use a dedicated trace from the fader bottom terminal, no other current sharing it.</text>
+  <text x="60" y="822" class="small">• No daisy-chained GND across boards. Every OEM PCB GND wire returns to the carrier-PCB star.</text>
+
+  <!-- ============================================================ -->
+  <!-- Power budget summary -->
+  <!-- ============================================================ -->
+  <rect x="40" y="555" width="320" height="40" rx="6" fill="#fff" stroke="#1565c0"/>
+  <text x="200" y="578" text-anchor="middle" class="note" fill="#0d47a1">total USB draw @ all LEDs lit: ~650 mA</text>
+  <text x="200" y="592" text-anchor="middle" class="small">comfortable on any host (USB 2.0 floor is 500 mA)</text>
+
+  <!-- Alternative path -->
+  <rect x="40" y="220" width="220" height="20" rx="4" class="danger"/>
+  <text x="150" y="234" text-anchor="middle" class="small" fill="#b71c1c">⚠ if LEDs always-on → ext 12 V barrel</text>
+</svg>
