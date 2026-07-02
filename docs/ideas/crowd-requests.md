@@ -46,3 +46,64 @@ Think "digital jukebox / request box" but built into the CDJ itself, feeding Tra
 | C | companion app | laptop | AP + serve portal shell | app is source of truth |
 
 **Leaning B/C** on first principles (library + Traktor integration live on the laptop), but the research pass will confirm and surface anything smarter.
+
+---
+
+## Research findings (deep-research pass, 2026-07-02)
+
+*5 angles, 22 sources fetched, 25 claims adversarially verified (23 confirmed, 2 killed).*
+
+**Verdict: feasible, but the ESP32-S3 must be the WiFi front-end ONLY, not the backend** — SoftAP
+defaults to **4 simultaneous clients**, caps at **~10** (firmware macro `ESP_WIFI_MAX_CONN_NUM`, not
+silicon); excess phones get deauth'd (`max connection, deauth!`). Party scale (dozens) needs the
+request server on the **laptop** (already running Traktor); the S3 provides the SoftAP + captive
+portal so guests still "join the deck's WiFi." → **Architecture C (hybrid) confirmed.**
+
+### Prior art (concept validated; UX + anti-abuse already solved)
+- **BeatTribe** (QR→browser, no app/account; every request reviewed, do-not-play lists, dedupe), **DJFY**
+  (browser, personal QR, DJ accept/reject — but *paid bidding* model), **RequestBox** (native, drop+vote),
+  **mubo** (vote-to-play), **Jukestar** (Spotify jukebox, fair-play interleaving — *can't play since Sept
+  2022 Spotify API change; UX pattern only*).
+- DIY analog: **`bschuetze/catalyst-jukebox`** — guests request from phone, pager-style ack, queue.
+- Anti-abuse patterns to copy: **approval gate before the DJ sees it**, dedupe, do-not-play list,
+  fair-play interleaving (no single guest hogs).
+
+### Traktor ingest (the hardest link — no live "add to crate" API)
+Three paths, each with a caveat:
+1. **MIDI `Append` / `Add As Next To Preparation List`** — officially MIDI-mappable browser controls.
+   Natural fit (deck is already USB-MIDI): MIDI-navigate to the track, append. Caveat: appends the
+   track the browser cursor is *on* → also need MIDI scroll-to-select.
+2. **M3U import** — Traktor imports `.m3u` natively; companion app writes a `Requests.m3u` to re-import.
+   Caveat: not real-time; may need re-analysis (verified 2-1; early TP3 briefly broke M3U import).
+3. **Direct `collection.nml` edit.**
+   *No source found a supported live Traktor Pro 4 API — this is the least-certain part of the design.*
+
+### Library exposure (solved + safe)
+`collection.nml` = plain XML, metadata + file paths, **NO audio** → safe to expose. Export via
+right-click → *Export Collection*. Parsers exist: `iond2v/NML-parser`, `wolkenarchitekt/traktor-nml-utils`,
+SetFlow, TraCoConverter. **beets `web` plugin** = ready metadata-over-HTTP browse pattern.
+
+### Captive portal caveat
+Buildable on S3 with stock ESP-IDF (`Nordesems/esp-captive-portal` targets esp32s3, zero deps) but
+**auto-popup is flaky** (no popup macOS post-Big Sur; some Android stall on IP w/ cellular; old devices
+need manual browser open — modern OSes want RFC 8910 signaling). **Printed QR → fixed IP is the robust
+fallback.**
+
+### Next steps
+1. Laptop **companion app**: watch exported `collection.nml`, serve searchable metadata list.
+2. **Request queue**: approval gate + dedupe + do-not-play (mirror BeatTribe/DJFY).
+3. **Ingest**: start M3U re-import (simplest) → evaluate MIDI Preparation-List append (most live).
+4. **Test early** on real iOS/Android (SoftAP cap + portal onboarding).
+5. Decide if S3 hosts anything beyond the AP.
+
+### Open questions
+- Any newer Traktor Pro 4 (2024+) scripting/OSC/plugin API for live crate manipulation? (none found)
+- Can Traktor reload an updated `.nml`/M3U mid-set without disrupting loaded decks / full re-analysis?
+- Real S3 concurrency/memory headroom as captive-redirect-only vs hosting the server — crossover point?
+- For a *private party* (not a paid bar), is a full manual approval gate needed or does fair-play + dedupe suffice?
+
+### Key sources
+BeatTribe, DJFY, RequestBox, Jukestar, mubo (prior art) · NI Traktor manual (MIDI Preparation List) ·
+`convert.guru`/`iond2v/NML-parser`/SetFlow (NML) · Espressif ESP-IDF WiFi docs + issue #10511 (SoftAP cap) ·
+`CDFER/Captive-Portal-ESP32`, `Nordesems/esp-captive-portal` (portal) · `bschuetze/catalyst-jukebox` (DIY) · beets.io.
+
