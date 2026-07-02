@@ -102,6 +102,35 @@ fallback.**
 - Real S3 concurrency/memory headroom as captive-redirect-only vs hosting the server — crossover point?
 - For a *private party* (not a paid bar), is a full manual approval gate needed or does fair-play + dedupe suffice?
 
+---
+
+## Show-stoppers — resolved (2026-07-02, before parts pause)
+
+**1. Traktor ingest — SOLVED (mechanism proven vs real data).**
+The DJ's real `collection.nml` (backed up at `5810:/mnt/storage/StemsDJ_Master_Backup/Traktor/collection.nml`,
+NML v20, **41,893 entries**, Traktor Pro 4) was parsed and a valid `CrowdRequests.nml` generated from it.
+- **Library exposure:** stream-parse `collection.nml` (`ET.iterparse`) → title/artist + `LOCATION`
+  (`VOLUME`+`DIR`+`FILE`), **no audio**. ~6k entries in 0.5 s → full 42k in ~3 s. This is the guest-facing list.
+- **Ingest format:** a playlist references a track by
+  `<ENTRY><PRIMARYKEY TYPE="TRACK" KEY="<VOLUME><DIR><FILE>"></PRIMARYKEY></ENTRY>` inside
+  `<PLAYLISTS><NODE TYPE="FOLDER" NAME="$ROOT"><SUBNODES COUNT="1"><NODE TYPE="PLAYLIST" NAME="Crowd Requests"><PLAYLIST …>`.
+  Emit a self-contained `.nml` (COLLECTION of chosen ENTRYs + the PLAYLIST) — **identical to the Set1–21 exports
+  Traktor authored itself**, so re-import is a native round-trip. PoC: `docs/ideas/poc/nml_requests_poc.py`.
+- **REMAINING TEST (needs DJ laptop, not parts):** import/re-import `CrowdRequests.nml` into *live* Traktor Pro 4
+  mid-set — confirm it's non-disruptive and how updates behave (new playlist vs dupes). Everything up to this is proven.
+
+**2. WiFi topology — RESOLVED.** The S3 SoftAP hard-caps at ~4–10 associations, so it can't be the AP dozens of
+phones join. Decision: the **request server + WiFi for party scale live off-deck** (DJ laptop hotspot or a cheap
+travel router); the **deck is the QR/entry touchpoint**, not the AP. For small gatherings (≤~8 phones) the S3 SoftAP
+can host directly. Either way the S3 is front-end only — matches the hybrid architecture.
+
+**3. Captive-portal onboarding — RESOLVED.** OS auto-popup is unreliable (macOS post-Big Sur, Android w/ cellular,
+old devices). Decision: **printed/displayed QR → fixed URL is the primary onboarding**; auto-popup is best-effort only.
+Sidesteps the whole RFC-8910 flakiness.
+
+**Net:** all three show-stoppers cleared except one bench test (live Traktor re-import) that depends on the laptop,
+not the CDJ hardware parts — so the parts pause doesn't block it.
+
 ### Key sources
 BeatTribe, DJFY, RequestBox, Jukestar, mubo (prior art) · NI Traktor manual (MIDI Preparation List) ·
 `convert.guru`/`iond2v/NML-parser`/SetFlow (NML) · Espressif ESP-IDF WiFi docs + issue #10511 (SoftAP cap) ·
