@@ -131,6 +131,39 @@ Sidesteps the whole RFC-8910 flakiness.
 **Net:** all three show-stoppers cleared except one bench test (live Traktor re-import) that depends on the laptop,
 not the CDJ hardware parts — so the parts pause doesn't block it.
 
+---
+
+## ⭐ Prior-art update: AlphaTheta "CoBeat" on the CDJ-1500X (announced 2026-07-02)
+
+**Pioneer DJ/AlphaTheta just shipped exactly this feature.** The new budget CDJ-1500X ($1,699,
+10.1" touch, built-in WiFi, CloudDirectPlay) launches with **CoBeat** (crowd requests, live July 9 2026
+with a rekordbox update): DJ pre-loads a **curated catalogue** of requestable tracks → shows a **QR code**
+→ audience **votes / requests / messages** (QR→web, no app) → requests **land on the CDJ browse screen,
+"ready to drop in"**; **emoji reactions** appear on the DJ's phone; DJ can **toggle on/off**.
+
+**Meaning: concept validated by the incumbent, and our independent design matched their shipped choices**
+(QR onboarding, DJ-curated/moderated, requests into the browse flow).
+
+**Design changes to adopt from CoBeat:**
+- **Curated "Requestable" catalogue, not the full library** — expose ONE DJ-curated Traktor playlist node
+  (parse just that `<NODE TYPE="PLAYLIST" NAME="Requestable">`), not all 41,893 COLLECTION entries. Kills
+  troll/impossible requests, cleaner UX. (Trivial change to the PoC parser.)
+- **Voting** on requests (surface demand — matches mubo/Jukestar fair-play too).
+- Optional: guest **messages + emoji reactions** to the DJ's phone.
+
+**Why this build still matters (distinct niche):** CoBeat = new $1,699 hardware + rekordbox + cloud (likely
+subscription). This build = **retrofit a CDJ-1000MK2 you own, Traktor, local `collection.nml`, no cloud/sub,
+open/DIY.** The Traktor + gear-you-own + offline version of the same idea.
+
+**Gap CoBeat has that v0.1 can't:** requests shown on the deck's own screen (CoBeat uses the CDJ's 10.1"
+display). v0.1 has no screen — requests land in Traktor on the laptop. If on-deck request display becomes a
+goal, that's another argument for the v0.2 display path (Path D). Nice-to-have, not a blocker.
+
+Sources: [alphatheta.com/product/cdj-1500x](https://alphatheta.com/en/product/player/cdj-1500x/black/) ·
+[Attack Magazine](https://www.attackmagazine.com/news/alphatheta-release-cdj-1500x-with-cloud-djing-crowd-requests-in-a-compact-player-format/) ·
+[DJ TechTools](https://djtechtools.com/2026/07/02/the-cdj-1500x-is-alphathetas-first-budget-minded-media-player-since-the-xdj-1000mk2/) ·
+[RA](https://ra.co/news/85496).
+
 ### Key sources
 BeatTribe, DJFY, RequestBox, Jukestar, mubo (prior art) · NI Traktor manual (MIDI Preparation List) ·
 `convert.guru`/`iond2v/NML-parser`/SetFlow (NML) · Espressif ESP-IDF WiFi docs + issue #10511 (SoftAP cap) ·
